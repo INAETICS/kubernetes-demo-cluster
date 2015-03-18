@@ -1,0 +1,51 @@
+{
+    "apiVersion": "v1beta1",
+    "desiredState": {
+        "podTemplate": {
+            "desiredState": {
+                "manifest": {
+                    "containers": [
+                        {
+                            "command": [
+                                "/tmp/node-agent.sh",
+                                "felix_1"
+                            ],
+                            "env": [
+                                {
+                                    "name": "ETCDCTL_PEERS",
+                                    "value": "172.17.8.20:4001"
+                                },
+                                {
+                                    "name": "HOSTPORT",
+                                    "value": "8080"
+                                }
+                            ],
+                            "image": "172.17.8.20:5000/inaetics/node-agent",
+                            "name": "amdatu-datastore-viewer-container",
+                            "ports": [
+                                {
+                                    "containerPort": 8080,
+                                    "hostPort": 8081
+                                }
+                            ]
+                        }
+                    ],
+                    "id": "amdatu-viewer-pod",
+                    "version": "v1beta1"
+                }
+            },
+            "labels": {
+                "name": "amdatu-datastore-viewer-pod"
+            }
+        },
+        "replicaSelector": {
+            "name": "amdatu-datastore-viewer-pod"
+        },
+        "replicas": 1
+    },
+    "id": "amdatu-datastore-viewer-controller",
+    "kind": "ReplicationController",
+    "labels": {
+        "name": "amdatu-datastore-viewer-controller"
+    }
+}

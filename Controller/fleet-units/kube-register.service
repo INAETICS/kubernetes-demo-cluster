@@ -1,0 +1,16 @@
+[Unit]
+Description=Kubernetes Registration Service
+Documentation=https://github.com/kelseyhightower/kube-register
+After=kube-download.service
+Requires=kube-download.service
+
+[Service]
+ExecStart=/opt/bin/kube-register \
+--metadata=role=kubernetes \
+--fleet-endpoint=unix:///var/run/fleet.sock \
+--api-endpoint=http://127.0.0.1:10260
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+MachineOf=kube-apiserver.service

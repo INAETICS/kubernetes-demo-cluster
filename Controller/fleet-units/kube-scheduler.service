@@ -1,0 +1,13 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=kube-download.service
+Requires=kube-download.service
+
+[Service]
+ExecStart=/opt/bin/kube-scheduler --master=127.0.0.1:10260
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+MachineOf=kube-apiserver.service

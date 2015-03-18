@@ -1,0 +1,15 @@
+[Unit]
+Description=Kubernetes Proxy
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=kube-download.service
+Requires=kube-download.service
+
+[Service]
+ExecStart=/opt/bin/kube-proxy \
+    --master=http://172.17.8.20:10260 \
+    --logtostderr=true
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+Global=true

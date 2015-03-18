@@ -1,0 +1,54 @@
+#cloud-config
+
+coreos:
+  update:
+    group: alpha
+    reboot-strategy: 'off'
+  etcd:
+    name: controller
+    addr: $public_ipv4:4001
+    peer-addr: $public_ipv4:7001
+  fleet:
+    public-ip: $public_ipv4
+    etcd_servers: http://172.17.8.20:4001
+    metadata: role=etcd
+  units:
+    - name: etcd.service
+      command: start
+
+    - name: fleet.service
+      command: start
+
+    - name: docker.service
+      command: restart
+      drop-ins:
+        - name: 50-insecure-registry-and-weave.conf
+          content: |
+            [Service]
+            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
+
+    - name: weave-bootstrap.service
+      command: start
+      runtime: true
+      content: |
+        [Unit]
+        Description=Bootstraps Weave service as a set of systemd units
+        After=docker.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/coreos-cloudinit --from-file=/var/lib/coreos-vagrant/coreos-weave.yaml
+
+    - name: local-services.service
+      command: start
+      runtime: true
+      content: |
+        [Unit]
+        Description=Bootstraps all local services as systemd units
+        After=docker.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/bin/bash -c "for I in /var/lib/coreos-vagrant/coreos-*.yaml; do /usr/bin/coreos-cloudinit --from-file=$I; done"
+
+###EOF###

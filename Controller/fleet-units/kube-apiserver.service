@@ -1,0 +1,20 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=kube-download.service
+Requires=kube-download.service
+
+[Service]
+ExecStart=/opt/bin/kube-apiserver \
+    --address=0.0.0.0 \
+    --port=10260 \
+    --etcd_servers=http://172.17.8.20:4001 \
+    --portal_net=10.0.0.0/16 \
+    --logtostderr=true \
+    --v=0
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+MachineMetadata=role=etcd
+

@@ -1,0 +1,15 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=kube-download.service
+Requires=kube-download.service
+
+[Service]
+ExecStart=/opt/bin/kube-controller-manager \
+    --master=127.0.0.1:10260 \
+    --logtostderr=true
+Restart=always
+RestartSec=10
+
+[X-Fleet]
+MachineOf=kube-apiserver.service

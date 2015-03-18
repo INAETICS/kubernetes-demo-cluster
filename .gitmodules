@@ -1,0 +1,6 @@
+[submodule "Controller/inaetics-demo/node-provisioning"]
+	path = Controller/inaetics-demo/node-provisioning
+	url = https://github.com/INAETICS/node-provisioning-service.git
+[submodule "Controller/inaetics-demo/node-agent"]
+	path = Controller/inaetics-demo/node-agent
+	url = https://github.com/INAETICS/node-agent-java.git

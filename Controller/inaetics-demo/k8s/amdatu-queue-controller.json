@@ -1,0 +1,51 @@
+{
+    "apiVersion": "v1beta1",
+    "desiredState": {
+        "podTemplate": {
+            "desiredState": {
+                "manifest": {
+                    "containers": [
+                        {
+                            "command": [
+                                "/tmp/node-agent.sh",
+                                "felix_2"
+                            ],
+                            "env": [
+                                {
+                                    "name": "ETCDCTL_PEERS",
+                                    "value": "172.17.8.20:4001"
+                                },
+                                {
+                                    "name": "HOSTPORT",
+                                    "value": "8080"
+                                }
+                            ],
+                            "image": "172.17.8.20:5000/inaetics/node-agent",
+                            "name": "amdatu-queue-container",
+                            "ports": [
+                                {
+                                    "containerPort": 8080,
+                                    "hostPort": 8081
+                                }
+                            ]
+                        }
+                    ],
+                    "id": "amdatu-queue-pod",
+                    "version": "v1beta1"
+                }
+            },
+            "labels": {
+                "name": "amdatu-queue-pod"
+            }
+        },
+        "replicaSelector": {
+            "name": "amdatu-queue-pod"
+        },
+        "replicas": 1
+    },
+    "id": "amdatu-queue-controller",
+    "kind": "ReplicationController",
+    "labels": {
+        "name": "amdatu-queue-controller"
+    }
+}
