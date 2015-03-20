@@ -28,7 +28,6 @@ coreos:
       content: |
         [Unit]
         Description=Init Weave Configuration
-        Documentation=https://github.com/slintes/CoreOSKubernetesTest/tree/weave
         After=etcd.service
         Requires=etcd.service
         After=network-online.target

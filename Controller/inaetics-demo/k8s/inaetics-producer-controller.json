@@ -8,7 +8,7 @@
                         {
                             "command": [
                                 "/tmp/node-agent.sh",
-                                "felix_2"
+                                "felix_4"
                             ],
                             "env": [
                                 {
@@ -21,31 +21,31 @@
                                 }
                             ],
                             "image": "172.17.8.20:5000/inaetics/node-agent",
-                            "name": "amdatu-queue-container",
+                            "name": "inaetics-producer-container",
                             "ports": [
                                 {
                                     "containerPort": 8080,
-                                    "hostPort": 8081
+                                    "hostPort": 8083
                                 }
                             ]
                         }
                     ],
-                    "id": "amdatu-queue-pod",
+                    "id": "inaetics-producer-pod",
                     "version": "v1beta1"
                 }
             },
             "labels": {
-                "name": "amdatu-queue-pod"
+                "name": "inaetics-producer-pod"
             }
         },
         "replicaSelector": {
-            "name": "amdatu-queue-pod"
+            "name": "inaetics-producer-pod"
         },
         "replicas": 1
     },
-    "id": "amdatu-queue-controller",
+    "id": "inaetics-producer-controller",
     "kind": "ReplicationController",
     "labels": {
-        "name": "amdatu-queue-controller"
+        "name": "inaetics-producer-controller"
     }
 }

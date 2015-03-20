@@ -27,6 +27,25 @@ coreos:
             [Service]
             Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
 
+    - name: docker-registry.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Docker Registry Service
+        Requires=docker.service
+        After=network-online.target docker.service
+
+        [Service]
+        ExecStart=/usr/bin/docker run -p 5000:5000 registry
+        ExecStartPost=/bin/bash -c "cd /home/core/inaetics-demo; for I in node-*; do ../bin/docker-build.sh $I; done"
+        TimeoutStartSec=0
+        Restart=always
+        RestartSec=10
+
+        [Install]
+        WantedBy=multi-user.target
+
     - name: weave-bootstrap.service
       command: start
       runtime: true
@@ -39,16 +58,38 @@ coreos:
         Type=oneshot
         ExecStart=/usr/bin/coreos-cloudinit --from-file=/var/lib/coreos-vagrant/coreos-weave.yaml
 
-    - name: local-services.service
+    - name: kubernetes-download.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Kubernetes Download Service
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        Environment="KUBE_VERSION=v0.13.1"
+        ExecStart=/bin/bash -c 'mkdir -p /opt/bin'
+        ExecStart=/bin/bash -c '/usr/bin/wget -O - "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/kubernetes-server-linux-amd64.tar.gz" | tar -xz -C /opt/bin --strip=3'
+        ExecStart=/bin/bash -c '/usr/bin/wget -P /opt/bin "https://storage.googleapis.com/kubernetes/kube-register"'
+        ExecStart=/bin/bash -c 'chmod 0755 /opt/bin/kube*'
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: kubernetes-bootstrap.service
       command: start
       runtime: true
       content: |
         [Unit]
-        Description=Bootstraps all local services as systemd units
-        After=docker.service
+        Description=Bootstraps the Kubernetes services as systemd units
+        Requires=kubernetes-download.service
+        After=weave-bootstrap.service docker-registry.service kubernetes-download.service
 
         [Service]
         Type=oneshot
-        ExecStart=/bin/bash -c "for I in /var/lib/coreos-vagrant/coreos-*.yaml; do /usr/bin/coreos-cloudinit --from-file=$I; done"
+        ExecStart=/usr/bin/coreos-cloudinit --from-file=/var/lib/coreos-vagrant/coreos-k8s.yaml
 
 ###EOF###

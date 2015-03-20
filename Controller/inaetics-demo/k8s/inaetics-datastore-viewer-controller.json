@@ -8,7 +8,7 @@
                         {
                             "command": [
                                 "/tmp/node-agent.sh",
-                                "felix_3"
+                                "felix_1"
                             ],
                             "env": [
                                 {
@@ -21,31 +21,31 @@
                                 }
                             ],
                             "image": "172.17.8.20:5000/inaetics/node-agent",
-                            "name": "amdatu-processor-container",
+                            "name": "inaetics-datastore-viewer-container",
                             "ports": [
                                 {
                                     "containerPort": 8080,
-                                    "hostPort": 8082
+                                    "hostPort": 8081
                                 }
                             ]
                         }
                     ],
-                    "id": "amdatu-processor-pod",
+                    "id": "inaetics-viewer-pod",
                     "version": "v1beta1"
                 }
             },
             "labels": {
-                "name": "amdatu-processor-pod"
+                "name": "inaetics-datastore-viewer-pod"
             }
         },
         "replicaSelector": {
-            "name": "amdatu-processor-pod"
+            "name": "inaetics-datastore-viewer-pod"
         },
-        "replicas": 3
+        "replicas": 1
     },
-    "id": "amdatu-processor-controller",
+    "id": "inaetics-datastore-viewer-controller",
     "kind": "ReplicationController",
     "labels": {
-        "name": "amdatu-processor-controller"
+        "name": "inaetics-datastore-viewer-controller"
     }
 }

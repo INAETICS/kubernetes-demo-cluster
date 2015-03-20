@@ -2,28 +2,12 @@
 
 coreos:
     units:
-       - name: kubernetes-download.service
-         command: start
-         enable: true
-         content: |
-             [Unit]
-             Description=Kubernetes Start script
-             Documentation=https://github.com/slintes/CoreOSKubernetesTest
-
-             [Service]
-             Type=oneshot
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-download.service
-
-             [Install]
-             WantedBy=multi-user.target
-
        - name: kubernetes.service
          command: start
          enable: true
          content: |
              [Unit]
              Description=Kubernetes Start script
-             Documentation=https://github.com/slintes/CoreOSKubernetesTest
              Requires=etcd.service fleet.service kubernetes-download.service
              After=docker-registry.service kubernetes-download.service
 
@@ -48,16 +32,15 @@ coreos:
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes services
-             Documentation=https://github.com/slintes/CoreOSKubernetesTest
              Requires=kubernetes.service
-             After=kubernetes.service
+             After=inaetics-k8s-controllers.service
 
              [Service]
              Type=oneshot
              RemainAfterExit=yes
              EnvironmentFile=/etc/kubernetes.env
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/amdatu-viewer-service.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
              Restart=no
 
              [Install]
@@ -69,19 +52,19 @@ coreos:
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes controllers
-             Documentation=https://github.com/slintes/CoreOSKubernetesTest
              Requires=kubernetes.service
              After=kubernetes.service
+             Before=inaetics-k8s-services.service
 
              [Service]
              Type=oneshot
              RemainAfterExit=yes
              EnvironmentFile=/etc/kubernetes.env
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/amdatu-datastore-viewer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/amdatu-processor-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/amdatu-producer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/amdatu-queue-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
              Restart=no
 
              [Install]

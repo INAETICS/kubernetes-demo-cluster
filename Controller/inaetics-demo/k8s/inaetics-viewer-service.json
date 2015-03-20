@@ -1,14 +1,14 @@
 {
     "apiVersion": "v1beta1",
     "containerPort": 8080,
-    "id": "ace-provisioning-service",
+    "id": "inaetics-viewer-service",
     "kind": "Service",
-    "port": 90,
+    "port": 80,
     "protocol": "TCP",
     "publicIPs": [
         "172.17.8.20"
     ],
     "selector": {
-        "name": "ace-provisioning-pod"
+        "name": "inaetics-datastore-viewer-pod"
     }
 }
