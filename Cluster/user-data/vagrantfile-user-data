@@ -23,6 +23,27 @@ coreos:
             [Service]
             Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
 
+    - name: kubernetes-download.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Downloads Kubernetes for cluster nodes
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        Environment="KUBE_VERSION=v0.13.1"
+        ExecStart=/bin/bash -c 'mkdir -p /opt/bin'
+        ExecStart=/bin/bash -c '/usr/bin/wget -P /opt/bin "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/bin/linux/amd64/kube-proxy"'
+        ExecStart=/bin/bash -c '/usr/bin/wget -P /opt/bin "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/bin/linux/amd64/kubelet"'
+        ExecStart=/bin/bash -c 'chmod 0755 /opt/bin/kube*'
+
+        [Install]
+        WantedBy=multi-user.target
+
     - name: 10-weave.network
       runtime: false
       content: |
