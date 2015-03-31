@@ -23,7 +23,7 @@ For more information on the demonstrator itself, see the [INAETICS demonstrator 
 guide](https://github.com/INAETICS/demonstrator-cluster/blob/master/user_guide.pdf).
 
 This demonstrator consists of two parts: a set of cluster nodes that run the actual
-demonstrator application, and a controller that provides the plubming and coordinates the
+demonstrator application, and a controller that provides the plumbing and coordinates the
 deployment of the application.
 
 ### Cluster nodes
@@ -42,13 +42,12 @@ has a couple of more dependencies that it uses and responsibilities it takes car
 
 1. it installs and starts a Weave service for the virtualized networking between the
    various application services;
-2. it installs and starts the Kubernetes services that are needed for this demonstrator; 
-3. it also starts a Docker registry service which is used by the cluster nodes to obtain
+2. it also starts a Docker registry service which is used by the cluster nodes to obtain
    the Docker images they should run. After the Docker registry service is started, the
    Docker images used by the INAETICS demonstrator are built and pushed to it;
-4. it tells Fleet to start the various Kubernetes services onto *both* the controller and
+3. it tells Fleet to install and start the various Kubernetes services onto *both* the controller and
    cluster nodes 
-5. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
+4. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
 
 **NOTE**: given that Kubernetes and a couple of Docker images need to be downloaded and
 build, it takes a while before the controller is fully up and running!
@@ -85,8 +84,8 @@ what is happening, but we need to tell it where the Kubernetes API server is run
     core@controller ~ $ export $(cat /etc/kubernetes.env)
     core@controller ~ $ kubectl get services
     NAME                       LABELS                                    SELECTOR                             IP                  PORT
-    ace-provisioning-service   <none>                                    name=ace-provisioning-pod            10.0.247.91         80
-    inaetics-viewer-service    <none>                                    name=inaetics-datastore-viewer-pod   10.0.233.110        90
+    ace-provisioning-service   <none>                                    name=ace-provisioning-pod            10.0.247.91         90
+    inaetics-viewer-service    <none>                                    name=inaetics-datastore-viewer-pod   10.0.233.110        80
     kubernetes                 component=apiserver,provider=kubernetes   <none>                               10.0.0.2            443
     kubernetes-ro              component=apiserver,provider=kubernetes   <none>                               10.0.0.1            80
 
@@ -97,7 +96,7 @@ these are assigned by Weave and are used for internal communication.
 Note that once the controller is started, we need to start the cluster nodes. To start the
 cluster nodes, we need to issue the following:
 
-    $ cd Cluster
+    $ cd $GIT_REPO/Cluster
     $ vagrant up
     ...
     ==> node-1: Importing base box 'coreos-alpha'...
