@@ -27,7 +27,7 @@ coreos:
              WantedBy=multi-user.target
 
        - name: inaetics-k8s-services.service
-         command: start
+         command: stop
          enable: true
          content: |
              [Unit]
@@ -47,7 +47,7 @@ coreos:
              WantedBy=multi-user.target
 
        - name: inaetics-k8s-controllers.service
-         command: start
+         command: stop
          enable: true
          content: |
              [Unit]
