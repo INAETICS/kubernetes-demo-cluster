@@ -78,7 +78,23 @@ journal of the kubernetes service (this takes a while!):
     ...
     Mar 18 12:00:00 controller systemd[1]: Started Kubernetes Start script.
 
-Once the Kubernetes service is up and running, you can use the `kubectl` script to see
+Once the Kubernetes service is up and running, you can exit journalctl with Ctrl^C and create
+the Kubernetes ReplicationControllers and Services: 
+
+    core@controller ~ $ ~/bin/create-k8s-replicationControllers.sh
+    ace-provisioning-controller
+    inaetics-datastore-viewer-controller
+    inaetics-processor-controller
+    inaetics-producer-controller
+    inaetics-queue-controller
+    core@controller ~ $ ~/bin/create-k8s-services.sh
+    ace-provisioning-service
+    inaetics-viewer-service
+
+Note: if you want the ReplicationControllers and Services to be created automatically, set the "command" flag
+of inaetics-k8s-services.service and inaetics-k8s-controllers.service in `Controller/user-data/coreos-k8s.yaml` to "start".
+
+Now you can use the `kubectl` script to see
 what is happening, but we need to tell it where the Kubernetes API server is running:
 
     core@controller ~ $ export $(cat /etc/kubernetes.env)
