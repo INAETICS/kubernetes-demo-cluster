@@ -1,11 +1,26 @@
 {
     "apiVersion": "v1beta1",
+    "kind": "ReplicationController",
+    "id": "ace-provisioning-controller",
+    "labels": {
+        "name": "ace-provisioning-controller"
+    },
     "desiredState": {
+        "replicaSelector": {
+            "name": "ace-provisioning-pod"
+        },
+        "replicas": 1,
         "podTemplate": {
+            "labels": {
+                "name": "ace-provisioning-pod"
+            },
             "desiredState": {
                 "manifest": {
+                    "version": "v1beta1",
                     "containers": [
                         {
+                            "name": "ace-provisioning-container",
+                            "image": "172.17.8.20:5000/inaetics/node-provisioning",
                             "command": [
                                 "/tmp/node-provisioning.sh"
                             ],
@@ -19,8 +34,6 @@
                                     "value": "8080"
                                 }
                             ],
-                            "image": "172.17.8.20:5000/inaetics/node-provisioning",
-                            "name": "ace-provisioning-container",
                             "ports": [
                                 {
                                     "containerPort": 8080,
@@ -28,23 +41,9 @@
                                 }
                             ]
                         }
-                    ],
-                    "id": "ace-provisioning-pod",
-                    "version": "v1beta1"
+                    ]
                 }
-            },
-            "labels": {
-                "name": "ace-provisioning-pod"
             }
-        },
-        "replicaSelector": {
-            "name": "ace-provisioning-pod"
-        },
-        "replicas": 1
-    },
-    "id": "ace-provisioning-controller",
-    "kind": "ReplicationController",
-    "labels": {
-        "name": "ace-provisioning-controller"
+        }
     }
 }

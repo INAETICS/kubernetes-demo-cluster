@@ -1,13 +1,13 @@
 {
     "apiVersion": "v1beta1",
-    "containerPort": 8080,
-    "id": "ace-provisioning-service",
     "kind": "Service",
-    "port": 90,
+    "id": "ace-provisioning-service",
     "protocol": "TCP",
     "publicIPs": [
         "172.17.8.20"
     ],
+    "port": 90,
+    "containerPort": 8080,
     "selector": {
         "name": "ace-provisioning-pod"
     }

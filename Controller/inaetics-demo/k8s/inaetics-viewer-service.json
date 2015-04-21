@@ -1,13 +1,13 @@
 {
     "apiVersion": "v1beta1",
-    "containerPort": 8080,
-    "id": "inaetics-viewer-service",
     "kind": "Service",
-    "port": 80,
+    "id": "inaetics-viewer-service",
     "protocol": "TCP",
     "publicIPs": [
         "172.17.8.20"
     ],
+    "port": 80,
+    "containerPort": 8080,
     "selector": {
         "name": "inaetics-datastore-viewer-pod"
     }

@@ -1,11 +1,26 @@
 {
     "apiVersion": "v1beta1",
+    "kind": "ReplicationController",
+    "id": "inaetics-producer-controller",
+    "labels": {
+        "name": "inaetics-producer-controller"
+    },
     "desiredState": {
+        "replicaSelector": {
+            "name": "inaetics-producer-pod"
+        },
+        "replicas": 1,
         "podTemplate": {
+            "labels": {
+                "name": "inaetics-producer-pod"
+            },
             "desiredState": {
                 "manifest": {
+                    "version": "v1beta1",
                     "containers": [
                         {
+                            "name": "inaetics-producer-container",
+                            "image": "172.17.8.20:5000/inaetics/node-agent",
                             "command": [
                                 "/tmp/node-agent.sh",
                                 "felix_4"
@@ -20,8 +35,6 @@
                                     "value": "8080"
                                 }
                             ],
-                            "image": "172.17.8.20:5000/inaetics/node-agent",
-                            "name": "inaetics-producer-container",
                             "ports": [
                                 {
                                     "containerPort": 8080,
@@ -29,23 +42,9 @@
                                 }
                             ]
                         }
-                    ],
-                    "id": "inaetics-producer-pod",
-                    "version": "v1beta1"
+                    ]
                 }
-            },
-            "labels": {
-                "name": "inaetics-producer-pod"
             }
-        },
-        "replicaSelector": {
-            "name": "inaetics-producer-pod"
-        },
-        "replicas": 1
-    },
-    "id": "inaetics-producer-controller",
-    "kind": "ReplicationController",
-    "labels": {
-        "name": "inaetics-producer-controller"
+        }
     }
 }
