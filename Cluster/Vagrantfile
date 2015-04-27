@@ -10,7 +10,7 @@ $num_instances=5
 
 $coreos_channel="alpha"
 $coreos_name="coreos-" + $coreos_channel 
-$coreos_version=">= 607.0.0"
+$coreos_version="= 660.0.0"
 
 $virtualbox_gui = false
 $virtualbox_memory = 1024
