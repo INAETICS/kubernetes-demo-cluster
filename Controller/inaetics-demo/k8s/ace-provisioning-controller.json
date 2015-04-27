@@ -1,49 +1,63 @@
 {
-    "apiVersion": "v1beta1",
-    "kind": "ReplicationController",
-    "id": "ace-provisioning-controller",
+  "kind": "ReplicationController",
+  "apiVersion": "v1beta3",
+  "metadata": {
+    "name": "ace-provisioning-controller",
+    "creationTimestamp": null,
     "labels": {
-        "name": "ace-provisioning-controller"
-    },
-    "desiredState": {
-        "replicaSelector": {
-            "name": "ace-provisioning-pod"
-        },
-        "replicas": 1,
-        "podTemplate": {
-            "labels": {
-                "name": "ace-provisioning-pod"
-            },
-            "desiredState": {
-                "manifest": {
-                    "version": "v1beta1",
-                    "containers": [
-                        {
-                            "name": "ace-provisioning-container",
-                            "image": "172.17.8.20:5000/inaetics/node-provisioning",
-                            "command": [
-                                "/tmp/node-provisioning.sh"
-                            ],
-                            "env": [
-                                {
-                                    "name": "ETCDCTL_PEERS",
-                                    "value": "172.17.8.20:4001"
-                                },
-                                {
-                                    "name": "HOSTPORT",
-                                    "value": "8080"
-                                }
-                            ],
-                            "ports": [
-                                {
-                                    "containerPort": 8080,
-                                    "hostPort": 8080
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        }
+      "name": "ace-provisioning-controller"
     }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "name": "ace-provisioning-pod"
+    },
+    "template": {
+      "metadata": {
+        "creationTimestamp": null,
+        "labels": {
+          "name": "ace-provisioning-pod"
+        }
+      },
+      "spec": {
+        "volumes": null,
+        "containers": [
+          {
+            "name": "ace-provisioning-container",
+            "image": "172.17.8.20:5000/inaetics/node-provisioning",
+            "args": [
+              "/tmp/node-provisioning.sh"
+            ],
+            "ports": [
+              {
+                "hostPort": 8080,
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ],
+            "env": [
+              {
+                "name": "ETCDCTL_PEERS",
+                "value": "172.17.8.20:4001"
+              },
+              {
+                "name": "HOSTPORT",
+                "value": "8080"
+              }
+            ],
+            "resources": {},
+            "terminationMessagePath": "/dev/termination-log",
+            "imagePullPolicy": "IfNotPresent",
+            "capabilities": {}
+          }
+        ],
+        "restartPolicy": "Always",
+        "dnsPolicy": "ClusterFirst"
+      }
+    }
+  },
+  "status": {
+    "replicas": 0
+  }
 }

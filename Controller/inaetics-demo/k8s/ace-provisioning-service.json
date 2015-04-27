@@ -1,14 +1,27 @@
 {
-    "apiVersion": "v1beta1",
-    "kind": "Service",
-    "id": "ace-provisioning-service",
-    "protocol": "TCP",
-    "publicIPs": [
-        "172.17.8.20"
+  "kind": "Service",
+  "apiVersion": "v1beta3",
+  "metadata": {
+    "name": "ace-provisioning-service",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "",
+        "protocol": "TCP",
+        "port": 90,
+        "targetPort": 8080
+      }
     ],
-    "port": 90,
-    "containerPort": 8080,
     "selector": {
-        "name": "ace-provisioning-pod"
-    }
+      "name": "ace-provisioning-pod"
+    },
+    "portalIP": "",
+    "publicIPs": [
+      "172.17.8.20"
+    ],
+    "sessionAffinity": "None"
+  },
+  "status": {}
 }

@@ -6,9 +6,11 @@ After=kubernetes-download.service
 
 [Service]
 ExecStart=/opt/bin/kube-register \
-    --metadata=role=kubernetes \
-    --fleet-endpoint=unix:///var/run/fleet.sock \
-    --api-endpoint=http://127.0.0.1:10260
+    -metadata=role=kubernetes \
+    -fleet-endpoint=unix:///var/run/fleet.sock \
+    -api-endpoint=http://127.0.0.1:10260 \
+    -healthz-port=10248 \
+    -sync-interval=10
 Restart=always
 RestartSec=10
 
