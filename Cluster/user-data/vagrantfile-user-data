@@ -12,6 +12,9 @@ coreos:
     - name: etcd.service
       mask: true
 
+    - name: etcd2.service
+      mask: true
+
     - name: fleet.service
       command: start
 
