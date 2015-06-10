@@ -28,8 +28,8 @@ coreos:
       content: |
         [Unit]
         Description=Init Weave Configuration
-        After=etcd.service
-        Requires=etcd.service
+        After=etcd2.service
+        Requires=etcd2.service
         After=network-online.target
         Wants=network-online.target
 

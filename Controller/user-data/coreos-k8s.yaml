@@ -8,8 +8,8 @@ coreos:
          content: |
              [Unit]
              Description=Kubernetes Start script
-             Requires=etcd.service fleet.service kubernetes-download.service
-             After=docker-registry.service kubernetes-download.service
+             Requires=etcd2.service fleet.service
+             After=etcd2.service fleet.service
 
              [Service]
              Type=oneshot
