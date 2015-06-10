@@ -14,6 +14,7 @@ coreos:
              [Service]
              Type=oneshot
              RemainAfterExit=yes
+             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-download.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-proxy.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-kubelet.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-apiserver.service

@@ -61,35 +61,13 @@ coreos:
         Type=oneshot
         ExecStart=/usr/bin/coreos-cloudinit --from-file=/var/lib/coreos-vagrant/coreos-weave.yaml
 
-    - name: kubernetes-download.service
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=Kubernetes Download Service
-        After=network-online.target
-        Wants=network-online.target
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
-        Environment="KUBE_VERSION=v0.15.0"
-        ExecStart=/bin/bash -c 'mkdir -p /opt/bin'
-        ExecStart=/bin/bash -c '/usr/bin/wget -O - "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/kubernetes-server-linux-amd64.tar.gz" | tar -xz -C /opt/bin --strip=3'
-        ExecStart=/bin/bash -c '/usr/bin/wget -O /opt/bin/kube-register "https://github.com/kelseyhightower/kube-register/releases/download/v0.0.3/kube-register-0.0.3-linux-amd64"'
-        ExecStart=/bin/bash -c 'chmod 0755 /opt/bin/kube*'
-
-        [Install]
-        WantedBy=multi-user.target
-
     - name: kubernetes-bootstrap.service
       command: start
       runtime: true
       content: |
         [Unit]
         Description=Bootstraps the Kubernetes services as systemd units
-        Requires=kubernetes-download.service
-        After=weave-bootstrap.service docker-registry.service kubernetes-download.service
+        After=weave-bootstrap.service
 
         [Service]
         Type=oneshot
