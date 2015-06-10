@@ -20,7 +20,6 @@ coreos:
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-apiserver.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-scheduler.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-controller-manager.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-register.service
              ExecStartPost=/home/core/bin/create-k8s-env.sh
              Restart=no
 
