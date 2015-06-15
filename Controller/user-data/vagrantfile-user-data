@@ -67,7 +67,7 @@ coreos:
       content: |
         [Unit]
         Description=Bootstraps the Kubernetes services as systemd units
-        After=weave-bootstrap.service
+        After=weave-bootstrap.service docker-registry.service
 
         [Service]
         Type=oneshot
