@@ -32,7 +32,7 @@
             ],
             "ports": [
               {
-                "hostPort": 8081,
+                "hostPort": 8080,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }

@@ -26,27 +26,6 @@ coreos:
             [Service]
             Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
 
-    - name: kubernetes-download.service
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=Downloads Kubernetes for cluster nodes
-        After=network-online.target
-        Wants=network-online.target
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
-        Environment="KUBE_VERSION=v0.15.0"
-        ExecStart=/bin/bash -c 'mkdir -p /opt/bin'
-        ExecStart=/bin/bash -c '/usr/bin/wget -P /opt/bin "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/bin/linux/amd64/kube-proxy"'
-        ExecStart=/bin/bash -c '/usr/bin/wget -P /opt/bin "https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/bin/linux/amd64/kubelet"'
-        ExecStart=/bin/bash -c 'chmod 0755 /opt/bin/kube*'
-
-        [Install]
-        WantedBy=multi-user.target
-
     - name: 10-weave.network
       runtime: false
       content: |
@@ -75,7 +54,6 @@ coreos:
         [Unit]
         Description=Install Weave
         Documentation=http://zettio.github.io/weave/
-        Before=weave-configure.service
 
         [Service]
         Type=oneshot
@@ -113,8 +91,8 @@ coreos:
       content: |
         [Unit]
         Description=Weave Bridge
-        Requires=weave-configure.service
-        After=weave-configure.service
+        Requires=weave-configure.service weave-install.service
+        After=weave-configure.service weave-install.service
         Before=docker.service
 
         [Service]
@@ -136,8 +114,8 @@ coreos:
         [Unit]
         Description=Weave Network Helper
         Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
+        Requires=docker.service weave-install.service
+        After=docker.service weave-install.service
 
         [Service]
         ExecStart=/opt/bin/weave-helper
@@ -152,8 +130,8 @@ coreos:
         [Unit]
         Description=Weave Network Router
         Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
+        Requires=docker.service weave-install.service weave-configure.service
+        After=docker.service weave-install.service weave-configure.service
 
         [Service]
         Restart=always

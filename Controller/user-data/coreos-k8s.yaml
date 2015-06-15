@@ -8,18 +8,18 @@ coreos:
          content: |
              [Unit]
              Description=Kubernetes Start script
-             Requires=etcd.service fleet.service kubernetes-download.service
-             After=docker-registry.service kubernetes-download.service
+             Requires=etcd2.service fleet.service
+             After=etcd2.service fleet.service
 
              [Service]
              Type=oneshot
              RemainAfterExit=yes
+             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-download.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-proxy.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-kubelet.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-apiserver.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-scheduler.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-controller-manager.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-register.service
              ExecStartPost=/home/core/bin/create-k8s-env.sh
              Restart=no
 
@@ -33,7 +33,7 @@ coreos:
              [Unit]
              Description=INAETICS demonstrator Kubernetes services
              Requires=kubernetes.service
-             After=inaetics-k8s-controllers.service
+             After=kubernetes.service inaetics-k8s-controllers.service
 
              [Service]
              Type=oneshot
@@ -54,7 +54,6 @@ coreos:
              Description=INAETICS demonstrator Kubernetes controllers
              Requires=kubernetes.service
              After=kubernetes.service
-             Before=inaetics-k8s-services.service
 
              [Service]
              Type=oneshot

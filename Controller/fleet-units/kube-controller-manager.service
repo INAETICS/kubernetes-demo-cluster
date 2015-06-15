@@ -1,8 +1,8 @@
 [Unit]
 Description=Kubernetes Controller Manager
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-Requires=kubernetes-download.service
-After=kubernetes-download.service
+Requires=kube-download.service kube-apiserver.service
+After=kube-download.service kube-apiserver.service
 
 [Service]
 ExecStart=/opt/bin/kube-controller-manager \
