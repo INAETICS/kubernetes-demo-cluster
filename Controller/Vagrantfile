@@ -23,7 +23,7 @@ SCRIPT
 Vagrant.configure("2") do |config|
     config.vm.box = $coreos_name
     config.vm.box_version = $coreos_version
-    config.vm.box_url = "http://" + $coreos_channel + ".release.core-os.net/amd64-usr/current/coreos_production_vagrant.json"
+    config.vm.box_url = "http://" + $coreos_channel + ".release.core-os.net/amd64-usr/" + $coreos_version + "/coreos_production_vagrant.json"
 
     config.vm.define vm_name = $instance_name do |config|
         config.vm.hostname = vm_name
