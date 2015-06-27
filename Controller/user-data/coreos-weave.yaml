@@ -37,6 +37,7 @@ coreos:
         Type=oneshot
         RemainAfterExit=yes
         ExecStartPre=/bin/sleep 5
+        ExecStartPre=/bin/sh -c "if [ etcdctl ls /weave ]; then /bin/etcdctl rm --recursive weave; fi"
         ExecStartPre=/bin/etcdctl setdir weave
         ExecStartPre=/bin/etcdctl setdir weave/nodes
         ExecStartPre=/bin/etcdctl set weave/initialNode "172.17.8.20"
@@ -56,13 +57,14 @@ coreos:
         Description=Install Weave
         Documentation=http://zettio.github.io/weave/
         Before=weave-configure.service
+        After=network-online.target
 
         [Service]
         Type=oneshot
         RemainAfterExit=yes
         TimeoutStartSec=0
-        ExecStartPre=/usr/bin/wget -N -P /opt/bin https://github.com/zettio/weave/releases/download/v0.9.0/weave
-        ExecStartPre=/usr/bin/wget -N -P /opt/bin https://raw.github.com/slintes/weave-demos/master/poseidon/weave-helper
+        ExecStartPre=/bin/sh -c "if [ ! -f /opt/bin/weave ]; then /usr/bin/wget -N -P /opt/bin https://github.com/zettio/weave/releases/download/v0.9.0/weave; fi"
+        ExecStartPre=/bin/sh -c "if [ ! -f /opt/bin/weave-helper ]; then /usr/bin/wget -N -P /opt/bin https://raw.github.com/slintes/weave-demos/master/poseidon/weave-helper; fi"
         ExecStartPre=/usr/bin/chmod +x /opt/bin/weave
         ExecStartPre=/usr/bin/chmod +x /opt/bin/weave-helper
         ExecStart=/bin/echo Weave Installed

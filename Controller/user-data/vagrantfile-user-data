@@ -41,7 +41,7 @@ coreos:
 
         [Service]
         ExecStart=/usr/bin/docker run -p 5000:5000 registry
-        ExecStartPost=/bin/bash -c "cd /home/core/inaetics-demo; for I in node-*; do ../bin/docker-build.sh $I; done"
+        ExecStartPost=/bin/bash -c "cd /home/core/inaetics-demo; for I in node-* *-agent; do ../bin/docker-build.sh $I; done"
         TimeoutStartSec=0
         Restart=always
         RestartSec=10
@@ -55,7 +55,7 @@ coreos:
       content: |
         [Unit]
         Description=Bootstraps Weave service as a set of systemd units
-        After=docker.service
+        After=docker-registry.service
 
         [Service]
         Type=oneshot
