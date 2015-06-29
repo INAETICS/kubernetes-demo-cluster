@@ -41,6 +41,8 @@ coreos:
              EnvironmentFile=/etc/kubernetes.env
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
              Restart=no
 
              [Install]
@@ -65,6 +67,12 @@ coreos:
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
+             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
              Restart=no
 
              [Install]
