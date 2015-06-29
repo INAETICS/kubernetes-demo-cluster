@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define vm_name = $instance_name do |config|
         config.vm.hostname = vm_name
-        config.vm.network :private_network, ip: $instance_ip
+        config.vm.network :private_network, ip: $instance_ip, autoconfig: false
 
         config.vm.provider :virtualbox do |virtualbox|
             virtualbox.gui = $virtualbox_gui

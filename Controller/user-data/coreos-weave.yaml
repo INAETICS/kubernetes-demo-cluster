@@ -37,7 +37,9 @@ coreos:
         Type=oneshot
         RemainAfterExit=yes
         ExecStartPre=/bin/sleep 5
-        ExecStartPre=/bin/sh -c "if [ etcdctl ls /weave ]; then /bin/etcdctl rm --recursive weave; fi"
+        # Error code 1 is returned to indicate it is a directory and not a key
+        # Error code 4 is returned to indicate the key does not exist
+        ExecStartPre=-/bin/etcdctl rm --recursive weave
         ExecStartPre=/bin/etcdctl setdir weave
         ExecStartPre=/bin/etcdctl setdir weave/nodes
         ExecStartPre=/bin/etcdctl set weave/initialNode "172.17.8.20"
