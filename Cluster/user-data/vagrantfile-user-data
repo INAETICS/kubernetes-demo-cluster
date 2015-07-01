@@ -24,7 +24,7 @@ coreos:
         - name: 50-insecure-registry-and-weave.conf
           content: |
             [Service]
-            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
+            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243" --registry-mirror="http://172.17.8.20:5000"'
 
     - name: 10-weave.network
       runtime: false

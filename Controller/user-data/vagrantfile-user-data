@@ -28,7 +28,7 @@ coreos:
         - name: 50-insecure-registry-and-weave.conf
           content: |
             [Service]
-            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
+            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243" --registry-mirror="http://localhost:5000"'
 
     - name: docker-registry.service
       command: start
@@ -40,7 +40,7 @@ coreos:
         After=network-online.target docker.service
 
         [Service]
-        ExecStart=/usr/bin/docker run -p 5000:5000 registry
+        ExecStart=/usr/bin/docker run -p 5000:5000 -e MIRROR_SOURCE=https://registry-1.docker.io -e MIRROR_SOURCE_INDEX=https://index.docker.io registry
         ExecStartPost=/bin/bash -c "echo \"building node images\"; sleep 10; cd /home/core/inaetics-demo; for I in node-* *-agent; do ../bin/docker-build.sh $I; done"
         TimeoutStartSec=0
         Restart=always
