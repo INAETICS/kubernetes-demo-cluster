@@ -12,6 +12,8 @@ and OSX 10.10 was used. In addition, this repository makes use of Git submodules
 sure to clone it with the `--recursive` flag, or be sure to call `git submodule init &&
 git submodule update` after cloning!
 
+After the git initialisation Kubernetes and Weave shall be downloaded. In the Controller
+subdirectory execute the script: sh bin/initial-download.sh
 
 ## Overview
 

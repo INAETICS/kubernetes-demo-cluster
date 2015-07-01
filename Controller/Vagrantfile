@@ -9,7 +9,11 @@ $instance_ip="172.17.8.20"
 
 $coreos_channel="alpha"
 $coreos_name="coreos-" + $coreos_channel 
+<<<<<<< HEAD
+$coreos_version=">=723.0.0"
+=======
 $coreos_version="723.1.0"
+>>>>>>> a5266df27d320f82a12a9e31be89b5a40d623192
 
 $virtualbox_gui = false
 $virtualbox_memory = 1024
@@ -40,7 +44,10 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder "fleet-units", "/home/core/fleet-units"
         config.vm.synced_folder "inaetics-demo", "/home/core/inaetics-demo"
         config.vm.synced_folder "user-data", "/tmp/user-data"
-
+        config.vm.synced_folder "opt/bin", "/opt/bin"
+#        config.vm.synced_folder "my_registry", "/myregistrydata" 
+#        config.vm.synced_folder "my_registry", "/myregistrydata", :nfs => true 
+        config.vm.synced_folder "my_registry", "/myregistrydata", :rsync => true 
         config.vm.provision :shell, :inline => $provision_script
     end
 end
