@@ -23,7 +23,7 @@ coreos:
       command: start
 
     - name: docker.service
-      command: restart
+      command: start
       drop-ins:
         - name: 50-insecure-registry-and-weave.conf
           content: |
@@ -40,8 +40,9 @@ coreos:
         After=network-online.target docker.service
 
         [Service]
+        ExecStartPre=/usr/bin/docker load -i /home/core/images/registry.tar
         ExecStart=/usr/bin/docker run -p 5000:5000 -e MIRROR_SOURCE=https://registry-1.docker.io -e MIRROR_SOURCE_INDEX=https://index.docker.io registry
-        ExecStartPost=/bin/bash -c "echo \"building node images\"; sleep 10; cd /home/core/inaetics-demo; for I in node-* *-agent; do ../bin/docker-build.sh $I; done"
+        ExecStartPost=/home/core/bin/load-docker-images.sh
         TimeoutStartSec=0
         Restart=always
         RestartSec=10
@@ -67,7 +68,7 @@ coreos:
       content: |
         [Unit]
         Description=Bootstraps the Kubernetes services as systemd units
-        After=weave-bootstrap.service docker-registry.service
+        After=weave-bootstrap.service docker.service
 
         [Service]
         Type=oneshot
