@@ -9,11 +9,7 @@ $instance_ip="172.17.8.20"
 
 $coreos_channel="alpha"
 $coreos_name="coreos-" + $coreos_channel 
-<<<<<<< HEAD
-$coreos_version=">=723.0.0"
-=======
 $coreos_version="723.1.0"
->>>>>>> a5266df27d320f82a12a9e31be89b5a40d623192
 
 $virtualbox_gui = false
 $virtualbox_memory = 1024
