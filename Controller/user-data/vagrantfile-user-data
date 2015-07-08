@@ -6,14 +6,14 @@ coreos:
     reboot-strategy: 'off'
   etcd2:
     name: controller
-    listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+    listen-client-urls: http://0.0.0.0:2379
     listen-peer-urls: http://$public_ipv4:2380
     advertise-client-urls: http://$public_ipv4:2379
     initial-advertise-peer-urls: http://$public_ipv4:2380
     initial-cluster: controller=http://$public_ipv4:2380
   fleet:
     public-ip: $public_ipv4
-    etcd_servers: http://172.17.8.20:4001
+    etcd_servers: http://172.17.8.20:2379
     metadata: role=etcd
   units:
     - name: etcd2.service

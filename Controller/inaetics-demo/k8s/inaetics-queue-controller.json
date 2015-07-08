@@ -40,7 +40,7 @@
             "env": [
               {
                 "name": "ETCDCTL_PEERS",
-                "value": "172.17.8.20:4001"
+                "value": "172.17.8.20:2379"
               },
               {
                 "name": "HOSTPORT",
