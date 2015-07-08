@@ -21,7 +21,14 @@
         }
       },
       "spec": {
-        "volumes": null,
+        "volumes": [
+          {
+            "name": "bundles",
+            "hostPath": {
+              "path": "/home/core/bundles"
+            }
+          }
+        ],
         "containers": [
           {
             "name": "ace-provisioning-container",
@@ -44,6 +51,12 @@
               {
                 "name": "HOSTPORT",
                 "value": "8080"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "bundles",
+                "mountPath": "/bundles"
               }
             ],
             "resources": {},
