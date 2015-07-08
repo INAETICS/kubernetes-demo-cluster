@@ -17,8 +17,9 @@ coreos:
     metadata: role=etcd
   units:
     - name: etcd2.service
-      command: start
-
+      command: restart
+      # see https://github.com/coreos/bugs/issues/396
+      
     - name: fleet.service
       command: start
 
