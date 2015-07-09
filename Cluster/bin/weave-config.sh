@@ -8,7 +8,7 @@ echo "weave-config starting"
 
 CONFIG_FILE="/etc/weave.env"
 
-export ETCDCTL_PEERS=http://172.17.8.20:2379
+export ETCDCTL_PEERS=http://localhost:2379
 
 # get basic configuration
 initialNode=`etcdctl get weave/initialNode`

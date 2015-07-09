@@ -79,8 +79,8 @@ coreos:
       content: |
         [Unit]
         Description=Configure Weave
-        Requires=network-online.target
-        After=network-online.target
+        Requires=etcd2.service
+        After=etcd2.service
 
         [Service]
         Type=oneshot
