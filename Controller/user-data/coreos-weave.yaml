@@ -30,8 +30,6 @@ coreos:
         Description=Init Weave Configuration
         After=etcd2.service
         Requires=etcd2.service
-        After=network-online.target
-        Wants=network-online.target
 
         [Service]
         Type=oneshot
@@ -58,7 +56,6 @@ coreos:
         [Unit]
         Description=Install Weave
         Documentation=http://zettio.github.io/weave/
-        Before=weave-configure.service
         After=network-online.target
 
         [Service]
@@ -80,9 +77,7 @@ coreos:
         [Unit]
         Description=Configure Weave
         Requires=weave-init-config.service
-        Requires=weave-install.service
         After=weave-init-config.service
-        After=weave-install.service
 
         [Service]
         Type=oneshot
@@ -98,8 +93,8 @@ coreos:
       content: |
         [Unit]
         Description=Weave Bridge
-        Requires=weave-configure.service
-        After=weave-configure.service
+        Requires=weave-configure.service weave-install.service
+        After=weave-configure.service weave-install.service
         Before=docker.service
 
         [Service]
@@ -121,8 +116,8 @@ coreos:
         [Unit]
         Description=Weave Network Helper
         Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
+        Requires=docker.service weave-install.service
+        After=docker.service weave-install.service
 
         [Service]
         ExecStart=/opt/bin/weave-helper
@@ -137,8 +132,8 @@ coreos:
         [Unit]
         Description=Weave Network Router
         Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
+        Requires=docker.service weave-install.service weave-configure.service
+        After=docker.service weave-install.service weave-configure.service
 
         [Service]
         Restart=always

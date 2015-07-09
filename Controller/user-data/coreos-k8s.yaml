@@ -33,7 +33,7 @@ coreos:
              [Unit]
              Description=INAETICS demonstrator Kubernetes services
              Requires=kubernetes.service
-             After=kubernetes.service inaetics-k8s-controllers.service
+             After=kubernetes.service
 
              [Service]
              Type=oneshot
@@ -54,8 +54,8 @@ coreos:
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes controllers
-             Requires=kubernetes.service
-             After=kubernetes.service
+             Requires=kubernetes.service inaetics-k8s-services.service docker.service
+             After=kubernetes.service inaetics-k8s-services.service docker.service
 
              [Service]
              Type=oneshot
