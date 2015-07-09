@@ -21,7 +21,7 @@ coreos:
       # see https://github.com/coreos/bugs/issues/396
       
     - name: fleet.service
-      command: start
+      command: restart
 
     - name: docker.service
       command: restart
