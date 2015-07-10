@@ -11,27 +11,12 @@ coreos:
 
         [Network]
 
-    - name: weave-network.target
-      enable: true
-      content: |
-        [Unit]
-        Description=Weave Network Setup Complete
-        Documentation=man:systemd.special(7)
-        RefuseManualStart=no
-        After=network-online.target
-
-        [Install]
-        WantedBy=multi-user.target
-
     - name: weave-init-config.service
-      enable: true
       content: |
         [Unit]
         Description=Init Weave Configuration
-        After=etcd2.service
-        Requires=etcd2.service
-        After=network-online.target
-        Wants=network-online.target
+        After=etcd2.service network-online.target
+        Requires=etcd2.service network-online.target
 
         [Service]
         Type=oneshot
@@ -49,58 +34,24 @@ coreos:
         ExecStartPre=/bin/etcdctl mk weave/latest "1"
         ExecStart=/bin/echo weave configured
 
-        [Install]
-        WantedBy=weave-network.target
-
-    - name: weave-install.service
-      enable: true
-      content: |
-        [Unit]
-        Description=Install Weave
-        Documentation=http://zettio.github.io/weave/
-        Before=weave-configure.service
-        After=network-online.target
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
-        TimeoutStartSec=0
-        ExecStartPre=/bin/sh -c "if [ ! -f /opt/bin/weave ]; then /usr/bin/wget -N -P /opt/bin https://github.com/zettio/weave/releases/download/v0.9.0/weave; fi"
-        ExecStartPre=/bin/sh -c "if [ ! -f /opt/bin/weave-helper ]; then /usr/bin/wget -N -P /opt/bin https://raw.github.com/slintes/weave-demos/master/poseidon/weave-helper; fi"
-        ExecStartPre=/usr/bin/chmod +x /opt/bin/weave
-        ExecStartPre=/usr/bin/chmod +x /opt/bin/weave-helper
-        ExecStart=/bin/echo Weave Installed
-
-        [Install]
-        WantedBy=weave-network.target
-
     - name: weave-configure.service
-      enable: true
       content: |
         [Unit]
         Description=Configure Weave
         Requires=weave-init-config.service
-        Requires=weave-install.service
         After=weave-init-config.service
-        After=weave-install.service
 
         [Service]
         Type=oneshot
         RemainAfterExit=yes
         ExecStart=/home/core/bin/weave-config.sh
 
-        [Install]
-        WantedBy=weave-network.target
-
     - name: weave-create-bridge.service
-      enable: true
-      command: start
       content: |
         [Unit]
         Description=Weave Bridge
         Requires=weave-configure.service
         After=weave-configure.service
-        Before=docker.service
 
         [Service]
         Type=oneshot
@@ -111,12 +62,7 @@ coreos:
         ExecStart=/usr/bin/ip route add $BREAKOUT_ROUTE dev weave scope link
         ExecStart=/usr/bin/ip route add 224.0.0.0/4 dev weave
 
-        [Install]
-        WantedBy=weave-network.target
-
     - name: weave-helper.service
-      enable: true
-      command: start
       content: |
         [Unit]
         Description=Weave Network Helper
@@ -127,31 +73,23 @@ coreos:
         [Service]
         ExecStart=/opt/bin/weave-helper
 
-        [Install]
-        WantedBy=weave-network.target
-
     - name: weave.service
-      enable: true
       command: start
       content: |
         [Unit]
         Description=Weave Network Router
         Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
+        Requires=weave-configure.service weave-helper.service docker-load.service
+        After=weave-configure.service weave-helper.service docker-load.service
 
         [Service]
         Restart=always
         RestartSec=10s
         TimeoutStartSec=0
         EnvironmentFile=/etc/weave.env
-        ExecStartPre=/usr/bin/docker pull zettio/weave:0.9.0
         ExecStartPre=/opt/bin/weave launch $WEAVE_PEERS
         ExecStart=/usr/bin/docker logs -f weave
         SuccessExitStatus=2
         ExecStop=/opt/bin/weave stop
-
-        [Install]
-        WantedBy=weave-network.target
 
 ###EOF###

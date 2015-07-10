@@ -25,7 +25,7 @@
         "containers": [
           {
             "name": "inaetics-queue-container",
-            "image": "172.17.8.20:5000/inaetics/felix-agent",
+            "image": "inaetics/felix-agent",
             "args": [
               "/tmp/node-agent.sh",
               "felix_2"

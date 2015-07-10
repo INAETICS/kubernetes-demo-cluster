@@ -15,48 +15,38 @@ coreos:
     public-ip: $public_ipv4
     etcd_servers: http://172.17.8.20:4001
     metadata: role=etcd
+
   units:
-    - name: etcd2.service
-      command: start
-
-    - name: fleet.service
-      command: start
-
     - name: docker.service
-      command: start
       drop-ins:
         - name: 50-insecure-registry-and-weave.conf
           content: |
+            [Unit]
+            Requires=weave-create-bridge.service
+            After=weave-create-bridge.service
+
             [Service]
             Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243" --registry-mirror="http://localhost:5000"'
 
-    - name: docker-registry.service
-      command: start
-      enable: true
+    - name: docker-load.service
       content: |
         [Unit]
-        Description=Docker Registry Service
+        Description=Docker Load Service
         Requires=docker.service
-        After=network-online.target docker.service
+        After=docker.service
 
         [Service]
-        ExecStartPre=/usr/bin/docker load -i /home/core/images/registry.tar
-        ExecStart=/usr/bin/docker run -p 5000:5000 -e MIRROR_SOURCE=https://registry-1.docker.io -e MIRROR_SOURCE_INDEX=https://index.docker.io registry
-        ExecStartPost=/home/core/bin/load-docker-images.sh
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/home/core/bin/load-docker-images.sh
         TimeoutStartSec=0
-        Restart=always
-        RestartSec=10
-
-        [Install]
-        WantedBy=multi-user.target
+        Restart=no
 
     - name: weave-bootstrap.service
       command: start
-      runtime: true
       content: |
         [Unit]
         Description=Bootstraps Weave service as a set of systemd units
-        After=docker-registry.service
 
         [Service]
         Type=oneshot
@@ -64,11 +54,9 @@ coreos:
 
     - name: kubernetes-bootstrap.service
       command: start
-      runtime: true
       content: |
         [Unit]
         Description=Bootstraps the Kubernetes services as systemd units
-        After=weave-bootstrap.service docker.service
 
         [Service]
         Type=oneshot

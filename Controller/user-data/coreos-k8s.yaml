@@ -3,8 +3,6 @@
 coreos:
     units:
        - name: kubernetes.service
-         command: start
-         enable: true
          content: |
              [Unit]
              Description=Kubernetes Start script
@@ -14,26 +12,21 @@ coreos:
              [Service]
              Type=oneshot
              RemainAfterExit=yes
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-download.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-proxy.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-kubelet.service
+             # wait for fleet...
+             ExecStart=/usr/bin/sleep 5
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-apiserver.service
+             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-proxy.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-scheduler.service
              ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-controller-manager.service
-             ExecStartPost=/home/core/bin/create-k8s-env.sh
-             Restart=no
-
-             [Install]
-             WantedBy=multi-user.target
+             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-kubelet.service
+             ExecStart=/home/core/bin/create-k8s-env.sh
 
        - name: inaetics-k8s-services.service
-         command: start
-         enable: true
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes services
              Requires=kubernetes.service
-             After=kubernetes.service inaetics-k8s-controllers.service
+             After=kubernetes.service
 
              [Service]
              Type=oneshot
@@ -43,19 +36,14 @@ coreos:
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
-             Restart=no
-
-             [Install]
-             WantedBy=multi-user.target
 
        - name: inaetics-k8s-controllers.service
          command: start
-         enable: true
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes controllers
-             Requires=kubernetes.service
-             After=kubernetes.service
+             Requires=docker-load.service kubernetes.service inaetics-k8s-services.service
+             After=docker-load.service kubernetes.service inaetics-k8s-services.service
 
              [Service]
              Type=oneshot
@@ -73,9 +61,5 @@ coreos:
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             Restart=no
-
-             [Install]
-             WantedBy=multi-user.target
 
 ###EOF###

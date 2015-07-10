@@ -1,8 +1,6 @@
 [Unit]
 Description=Kubernetes Kubelet
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
-Requires=kube-download.service
-After=kube-download.service
 
 [Service]
 EnvironmentFile=/etc/environment
@@ -14,8 +12,8 @@ ExecStart=/opt/bin/kubelet \
     --allow-privileged=true \
     --healthz-bind_address=0.0.0.0 \
     --healthz-port=10248 \
-    --pod_infra_container_image=172.17.8.20:5000/google_containers/pause:0.8.0
-    --logtostderr=true
+    --logtostderr=true \
+    --v=3
 Restart=always
 RestartSec=10
 
