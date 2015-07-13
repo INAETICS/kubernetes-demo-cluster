@@ -32,7 +32,7 @@
         "containers": [
           {
             "name": "ace-provisioning-container",
-            "image": "172.17.8.20:5000/inaetics/node-provisioning",
+            "image": "inaetics/node-provisioning",
             "args": [
               "/tmp/node-provisioning.sh"
             ],

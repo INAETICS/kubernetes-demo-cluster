@@ -12,9 +12,6 @@ and OSX 10.10 was used. In addition, this repository makes use of Git submodules
 sure to clone it with the `--recursive` flag, or be sure to call `git submodule init &&
 git submodule update` after cloning!
 
-After the git initialisation Kubernetes and Weave shall be downloaded. In the Controller
-subdirectory execute the script: sh bin/initial-download.sh
-
 ## Overview
 
 This demonstrator shows how to set up a cluster based on CoreOS, Kubernetes and Weave.
@@ -44,21 +41,28 @@ has a couple of more dependencies that it uses and responsibilities it takes car
 
 1. it installs and starts a Weave service for the virtualized networking between the
    various application services;
-2. it also starts a Docker registry service which is used by the cluster nodes to obtain
-   the Docker images they should run. After the Docker registry service is started, the
-   Docker images used by the INAETICS demonstrator are built and pushed to it;
-3. it tells Fleet to install and start the various Kubernetes services onto *both* the controller and
+2. it tells Fleet to install and start the various Kubernetes services onto *both* the controller and
    cluster nodes 
-4. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
+3. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
 
-**NOTE**: given that Kubernetes and a couple of Docker images need to be downloaded and
-build, it takes a while before the controller is fully up and running!
+## Preparation
 
+During runtime we need several Docker images and binaries. In order to be able to run offline (for demos etc.),
+we need to pull / build these images and download the binaries before starting the cluster. You need a 
+working Docker Engine installation for this (see http://docs.docker.com/index.html). Please execute the provided
+script (assuming `$GIT_REPO` is set to the location of the kubernetes-demo-cluster repository):
+
+    $ cd $GIT_REPO/Controller/bin
+    $ ./initial-download.sh
+    building and saving celix-agent image
+    ...
+    
+The Docker images are saved to tar files. The tar files and the downloaded binaries are provisioned by vagrant
+to the CoreOS host during startup. Since the Docker images are quite big, the startup can take a while.
 
 ## Running
 
-First, we need to start the controller node. For this, we need to do (assuming
-`$GIT_REPO` is set to the location of the kubernetes-demo-cluster repository):
+First, we need to start the controller node. For this, we need to do:
 
     $ cd $GIT_REPO/Controller
     $ vagrant up && vagrant ssh
@@ -71,7 +75,7 @@ First, we need to start the controller node. For this, we need to do (assuming
     CoreOS alpha (618.0.0)
     core@controller ~ $ _
 
-After the controller node is started, it automatically proceeds and downloads a number of
+After the controller node is started, it automatically proceeds and starts a number of
 dependencies. One of the last services that is being started is the actual Kubernetes
 services, so to get a notion on whether the controller is fully ready, we can watch the
 journal of the kubernetes service (this takes a while!):
@@ -107,8 +111,8 @@ what is happening, but we need to tell it where the Kubernetes API server is run
     kubernetes                 component=apiserver,provider=kubernetes   <none>                               10.0.0.2            443
     kubernetes-ro              component=apiserver,provider=kubernetes   <none>                               10.0.0.1            80
 
-The listing above tells us that the `ace-provisioning-services` service runs on port `80`
-and the `inaetics-viewer-service` runs on port `90`. Note the "odd" looking IP addresses,
+The listing above tells us that the `ace-provisioning-services` service runs on port `90`
+and the `inaetics-viewer-service` runs on port `80`. Note the "odd" looking IP addresses,
 these are assigned by Weave and are used for internal communication.
 
 Note that once the controller is started, we need to start the cluster nodes. To start the
@@ -130,7 +134,7 @@ cluster nodes, we need to issue the following:
     ==> node-5: Running provisioner: shell...
         node-5: Running: inline script
 
-Each of the cluster nodes needs to download both Weave and Kubernetes binaries after which
+Each of the cluster nodes starts both Weave and Kubernetes after which
 they are ready for action.
 
 Once the cluster nodes are up and detected by the Kubernetes API-server, they are

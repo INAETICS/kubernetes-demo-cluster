@@ -17,7 +17,9 @@ $virtualbox_cpus = 1
 
 # makes all scripts executable & move the cloudinit files to the right place
 $provision_script = <<SCRIPT
-mv /tmp/user-data/* /var/lib/coreos-vagrant/ && find /home/core/* -name '*.sh' -type f -exec chmod 0755 '{}' ';'
+    mv /tmp/user-data/* /var/lib/coreos-vagrant/ && \
+    find /home/core/* -name '*.sh' -type f -exec chmod 0755 '{}' ';' && \
+    chmod 0755 /home/core/opt/bin/* && mkdir -p /opt/bin && mv /home/core/opt/bin/* /opt/bin/ 
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -37,14 +39,11 @@ Vagrant.configure("2") do |config|
 
         # sync local directories
         config.vm.synced_folder "bin", "/home/core/bin"
+        config.vm.synced_folder "opt/bin", "/home/core/opt/bin"
         config.vm.synced_folder "fleet-units", "/home/core/fleet-units"
+        config.vm.synced_folder "images", "/home/core/images"
         config.vm.synced_folder "inaetics-demo", "/home/core/inaetics-demo"
         config.vm.synced_folder "user-data", "/tmp/user-data"
-        config.vm.synced_folder "opt/bin", "/opt/bin"
-        config.vm.synced_folder "inaetics-demo/node-provisioning/bundles", "/home/core/bundles"
-#        config.vm.synced_folder "my_registry", "/myregistrydata" 
-#        config.vm.synced_folder "my_registry", "/myregistrydata", :nfs => true 
-        config.vm.synced_folder "my_registry", "/myregistrydata", :rsync => true 
         config.vm.provision :shell, :inline => $provision_script
     end
 end
