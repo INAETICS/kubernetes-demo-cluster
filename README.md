@@ -156,26 +156,25 @@ Suppose we have the following situation:
     CONTROLLER                             CONTAINER(S)                          IMAGE(S)                                      SELECTOR                             REPLICAS
     ace-provisioning-controller            ace-provisioning-container            172.17.8.20:5000/inaetics/node-provisioning   name=ace-provisioning-pod            1
     inaetics-datastore-viewer-controller   inaetics-datastore-viewer-container   172.17.8.20:5000/inaetics/node-agent          name=inaetics-datastore-viewer-pod   1
-    inaetics-processor-controller          inaetics-processor-container          172.17.8.20:5000/inaetics/node-agent          name=inaetics-processor-pod          3
-    inaetics-producer-controller           inaetics-producer-container           172.17.8.20:5000/inaetics/node-agent          name=inaetics-producer-pod           1
+    inaetics-processor-controller          inaetics-processor-container          172.17.8.20:5000/inaetics/node-agent          name=inaetics-processor-pod          1
+    inaetics-producer-controller           inaetics-producer-container           172.17.8.20:5000/inaetics/node-agent          name=inaetics-producer-pod           2
     inaetics-queue-controller              inaetics-queue-container              172.17.8.20:5000/inaetics/node-agent          name=inaetics-queue-pod              1
 
 From the last column, we can see that there are three `inaetics-processor-pods` and a
-single `inaetics-producer-pod`. To increase the number of producer pods to two and
-decrease the number of processor pods from three down to two we issue:
+single `inaetics-producer-pod`. To increase or decrease the number of producer pods we issue:
 
-    core@controller ~ $ kubectl resize --replicas=2 rc inaetics-processor-controller
-    core@controller ~ $ kubectl resize --replicas=2 rc inaetics-producer-controller
+    core@controller ~ $ kubectl scale --replicas=1 rc inaetics-producer-controller
     core@controller ~ $ kubectl get rc
     CONTROLLER                             CONTAINER(S)                          IMAGE(S)                                      SELECTOR                             REPLICAS
     ace-provisioning-controller            ace-provisioning-container            172.17.8.20:5000/inaetics/node-provisioning   name=ace-provisioning-pod            1
     inaetics-datastore-viewer-controller   inaetics-datastore-viewer-container   172.17.8.20:5000/inaetics/node-agent          name=inaetics-datastore-viewer-pod   1
-    inaetics-processor-controller          inaetics-processor-container          172.17.8.20:5000/inaetics/node-agent          name=inaetics-processor-pod          2
-    inaetics-producer-controller           inaetics-producer-container           172.17.8.20:5000/inaetics/node-agent          name=inaetics-producer-pod           2
+    inaetics-processor-controller          inaetics-processor-container          172.17.8.20:5000/inaetics/node-agent          name=inaetics-processor-pod          1
+    inaetics-producer-controller           inaetics-producer-container           172.17.8.20:5000/inaetics/node-agent          name=inaetics-producer-pod           1
     inaetics-queue-controller              inaetics-queue-container              172.17.8.20:5000/inaetics/node-agent          name=inaetics-queue-pod              1
 
 Kubernetes will automatically take care of the scheduling and starting (or stopping) of
 the new pods based on the newly configured replicas.
+The number of processors is controlled by the demonstrator, based on the utilization of the queue.
 
 ## References
 
