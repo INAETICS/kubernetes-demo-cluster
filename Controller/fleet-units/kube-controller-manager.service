@@ -7,6 +7,7 @@ After=kube-apiserver.service
 [Service]
 ExecStart=/opt/bin/kube-controller-manager \
     --master=127.0.0.1:10260 \
+    --node-monitor-grace-period=10s \
     --logtostderr=true \
     --v=3
 Restart=always
