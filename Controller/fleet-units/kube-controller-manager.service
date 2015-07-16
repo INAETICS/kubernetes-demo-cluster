@@ -8,6 +8,7 @@ After=kube-apiserver.service
 ExecStart=/opt/bin/kube-controller-manager \
     --master=127.0.0.1:10260 \
     --node-monitor-grace-period=10s \
+    --pod-eviction-timeout=10s \
     --logtostderr=true \
     --v=3
 Restart=always
