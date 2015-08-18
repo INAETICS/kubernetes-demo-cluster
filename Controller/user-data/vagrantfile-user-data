@@ -23,11 +23,13 @@ coreos:
     interface: $public_ipv4
     
   units:
+  
     - name: flanneld.service
       drop-ins:
         - name: 50-network-config.conf
           content: |
             [Service]
+            ExecStartPre=-/usr/bin/docker load -i /home/core/images/flannel.tar
             ExecStartPre=-/bin/bash -c 'until /usr/bin/etcdctl set /coreos.com/network/config \'{ "Network": "10.1.0.0/16" }\'; do echo "waiting for etcd..."; sleep 1; done'
              
     - name: docker.service

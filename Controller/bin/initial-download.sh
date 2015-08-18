@@ -2,6 +2,7 @@
 
 k8s_version=v1.0.3
 pause_version=0.8.0
+flannel_version=0.5.2
 
 # get absolute path of this script
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
@@ -22,3 +23,7 @@ pause_name="gcr.io/google_containers/pause:$pause_version"
 docker pull "$pause_name"
 docker save -o "$DIR/../images/pause.tar" "$pause_name"
 
+echo "pulling and saving flannel image"
+flannel_name="quay.io/coreos/flannel:$flannel_version"
+docker pull "$flannel_name"
+docker save -o "$DIR/../images/flannel.tar" "$flannel_name"
