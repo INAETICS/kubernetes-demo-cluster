@@ -16,6 +16,9 @@ coreos:
     etcd_servers: http://localhost:2379
     metadata: role=kubernetes
     
+  flannel:
+      interface: $public_ipv4
+      
   units:
     - name: etcd2.service
       command: start
@@ -23,23 +26,23 @@ coreos:
     - name: fleet.service
       command: start
 
+    - name: flanneld.service
+      command: start
+        
     - name: docker.service
       drop-ins:
-        - name: 50-insecure-registry-and-weave.conf
+        - name: 50-insecure-registry.conf
           content: |
-            [Unit]
-            Requires=weave-create-bridge.service
-            After=weave-create-bridge.service
-
             [Service]
-            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24" --bridge="weave" --restart="false" --host="tcp://127.0.0.1:4243"'
+            Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24"'
 
     - name: docker-load.service
+      command: start
       content: |
         [Unit]
         Description=Docker Load Service
-        Requires=docker.service
-        After=docker.service
+        Requires=flanneld.service docker.service
+        After=flanneld.service docker.service
 
         [Service]
         Type=oneshot
@@ -47,70 +50,3 @@ coreos:
         ExecStart=/home/core/bin/load-docker-images.sh
         TimeoutStartSec=0
         Restart=no
-
-    - name: 10-weave.network
-      runtime: false
-      content: |
-        [Match]
-        Type=bridge
-        Name=weave*
-
-        [Network]
-
-    - name: weave-configure.service
-      content: |
-        [Unit]
-        Description=Configure Weave
-        Requires=etcd2.service network-online.target
-        After=etcd2.service network-online.target
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
-        ExecStart=/home/core/bin/weave-config-cluster.sh
-
-    - name: weave-create-bridge.service
-      content: |
-        [Unit]
-        Description=Weave Bridge
-        Requires=weave-configure.service
-        After=weave-configure.service
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
-        EnvironmentFile=/etc/weave.env
-        ExecStart=/opt/bin/weave create-bridge
-        ExecStart=/usr/bin/ip addr add dev weave $BRIDGE_ADDRESS_CIDR
-        ExecStart=/usr/bin/ip route add $BREAKOUT_ROUTE dev weave scope link
-        ExecStart=/usr/bin/ip route add 224.0.0.0/4 dev weave
-
-    - name: weave-helper.service
-      content: |
-        [Unit]
-        Description=Weave Network Helper
-        Documentation=http://zettio.github.io/weave/
-        Requires=docker.service
-        After=docker.service
-
-        [Service]
-        ExecStart=/opt/bin/weave-helper
-
-    - name: weave.service
-      command: start
-      content: |
-        [Unit]
-        Description=Weave Network Router
-        Documentation=http://zettio.github.io/weave/
-        Requires=docker-load.service weave-configure.service weave-helper.service
-        After=docker-load.service weave-configure.service weave-helper.service
-
-        [Service]
-        Restart=always
-        RestartSec=10s
-        TimeoutStartSec=0
-        EnvironmentFile=/etc/weave.env
-        ExecStartPre=/opt/bin/weave launch $WEAVE_PEERS
-        ExecStart=/usr/bin/docker logs -f weave
-        SuccessExitStatus=2
-        ExecStop=/opt/bin/weave stop
