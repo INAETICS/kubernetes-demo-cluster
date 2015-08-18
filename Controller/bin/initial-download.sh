@@ -1,7 +1,7 @@
 #!/bin/bash
 
 weave_version=0.9.0
-k8s_version=v0.21.1
+k8s_version=v1.0.3
 pause_version=0.8.0
 
 # get absolute path of this script

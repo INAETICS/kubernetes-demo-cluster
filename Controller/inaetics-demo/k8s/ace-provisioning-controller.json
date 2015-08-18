@@ -1,6 +1,6 @@
 {
   "kind": "ReplicationController",
-  "apiVersion": "v1beta3",
+  "apiVersion": "v1",
   "metadata": {
     "name": "ace-provisioning-controller",
     "creationTimestamp": null,
@@ -53,16 +53,15 @@
                 "value": "8080"
               }
             ],
+            "resources": {},
             "volumeMounts": [
               {
                 "name": "bundles",
                 "mountPath": "/bundles"
               }
             ],
-            "resources": {},
             "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent",
-            "capabilities": {}
+            "imagePullPolicy": "IfNotPresent"
           }
         ],
         "restartPolicy": "Always",

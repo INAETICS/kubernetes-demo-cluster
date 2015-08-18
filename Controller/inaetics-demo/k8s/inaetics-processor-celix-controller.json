@@ -1,6 +1,6 @@
 {
   "kind": "ReplicationController",
-  "apiVersion": "v1beta3",
+  "apiVersion": "v1",
   "metadata": {
     "name": "inaetics-processor-celix-controller",
     "creationTimestamp": null,
@@ -21,7 +21,6 @@
         }
       },
       "spec": {
-        "volumes": null,
         "containers": [
           {
             "name": "inaetics-processor-celix-container",
@@ -49,8 +48,7 @@
             ],
             "resources": {},
             "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent",
-            "capabilities": {}
+            "imagePullPolicy": "IfNotPresent"
           }
         ],
         "restartPolicy": "Always",

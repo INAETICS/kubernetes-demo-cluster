@@ -10,7 +10,7 @@ $num_instances=5
 
 $coreos_channel="alpha"
 $coreos_name="coreos-" + $coreos_channel 
-$coreos_version="758.1.0"
+$coreos_version="773.1.0"
 
 $virtualbox_gui = false
 $virtualbox_memory = 1024
@@ -26,7 +26,7 @@ SCRIPT
 Vagrant.configure("2") do |config|
     config.vm.box = $coreos_name
     config.vm.box_version = $coreos_version
-    config.vm.box_url = "http://" + $coreos_channel + ".release.core-os.net/amd64-usr/current/coreos_production_vagrant.json"
+    config.vm.box_url = "http://" + $coreos_channel + ".release.core-os.net/amd64-usr/" + $coreos_version + "/coreos_production_vagrant.json"
 
     (1..$num_instances).each do |i|
         config.vm.define vm_name = $instance_name % i do |config|
