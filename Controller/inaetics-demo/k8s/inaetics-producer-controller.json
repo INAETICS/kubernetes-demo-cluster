@@ -9,7 +9,7 @@
     }
   },
   "spec": {
-    "replicas": 2,
+    "replicas": 1,
     "selector": {
       "name": "inaetics-producer-pod"
     },
