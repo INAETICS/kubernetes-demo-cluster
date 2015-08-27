@@ -14,11 +14,7 @@ coreos:
              RemainAfterExit=yes
              # wait for fleet...
              ExecStart=/usr/bin/sleep 5
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-apiserver.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-proxy.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-scheduler.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-controller-manager.service
-             ExecStart=/usr/bin/fleetctl start --no-block /home/core/fleet-units/kube-kubelet.service
+             ExecStart=/usr/bin/bash -c '/usr/bin/fleetctl start --no-block /home/core/fleet-units/*.service'
              ExecStart=/home/core/bin/create-k8s-env.sh
 
        - name: inaetics-k8s-services.service
