@@ -1,0 +1,41 @@
+{
+    "apiVersion": "v1",
+    "kind": "ReplicationController",
+    "metadata": {
+	"labels": {
+	    "k8s-app" : "heapster",
+	    "name": "heapster",
+	    "version": "v6"
+	},
+	"name": "heapster",
+	"namespace": "default"
+    },
+    "spec": {
+	"replicas": 1,
+	"selector": {
+	    "k8s-app": "heapster",
+	    "version": "v6"
+	},
+	"template": {
+	    "metadata": {
+		"labels": {
+		    "k8s-app": "heapster",
+		    "version": "v6"
+		}
+	    },
+	    "spec": {
+		"containers": [
+		    {
+			"image": "kubernetes/heapster:v0.17.0",
+			"name": "heapster",
+			"command": [
+			    "/heapster",
+			    "--source=cadvisor:coreos?fleetEndpoint=http://172.17.8.20:2379&cadvisorPort=4194",
+			    "--sink=influxdb:http://172.17.8.20:8086"
+			]
+		    }
+		]
+	    }
+	}
+    }
+}
