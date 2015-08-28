@@ -10,6 +10,7 @@ do
 done
 
 echo "KUBERNETES_MASTER=http://$k8s_master:10260" >/etc/kubernetes.env
+echo "env file written" | systemd-cat -t "create-k8s-env"
 
 return_code=1
 while [ "$return_code" != 0 ]

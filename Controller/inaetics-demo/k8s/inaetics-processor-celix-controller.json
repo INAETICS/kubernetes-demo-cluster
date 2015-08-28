@@ -43,7 +43,7 @@
               },
               {
                 "name": "HOSTPORT",
-                "value": "8080"
+                "value": "9082"
               }
             ],
             "resources": {},
