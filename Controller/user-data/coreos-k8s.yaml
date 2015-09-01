@@ -31,12 +31,10 @@ coreos:
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/influxdb-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/grafana-service.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/heapster-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/influxdb-service.json
-             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/grafana-service.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/heapster-service.json
 
        - name: inaetics-k8s-controllers.service
@@ -57,7 +55,6 @@ coreos:
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/influxdb-grafana-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/heapster-controller.json
                 
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
@@ -67,6 +64,5 @@ coreos:
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
              ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/heapster-controller.json
-             ExecStop=/opt/bin/kubectl stop -f /home/core/inaetics-demo/k8s/influxdb-grafana-controller.json
 
 ###EOF###
