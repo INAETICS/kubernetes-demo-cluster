@@ -10,7 +10,7 @@
       {
         "protocol": "TCP",
         "port": 80,
-        "targetPort": 9080,
+        "targetPort": 8080,
         "nodePort": 0
       }
     ],

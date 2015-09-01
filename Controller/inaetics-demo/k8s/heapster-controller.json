@@ -28,12 +28,14 @@
 		    {
 			"image": "kubernetes/heapster:v0.17.0",
 			"name": "heapster",
-			"command": [
-			    "/heapster",
-			    "--source=cadvisor:coreos?fleetEndpoint=http://172.17.8.20:2379&cadvisorPort=4194",
+            "command": [
+              "/heapster"
+            ],
+			"args": [
+			    "--source=kubernetes:http://172.17.8.20:10260?inClusterConfig=false&kubeletPort=10250&kubeletHttps=true&auth=",
 			    "--sink=influxdb:http://172.17.8.20:8086"
 			]
-		    }
+            }
 		]
 	    }
 	}

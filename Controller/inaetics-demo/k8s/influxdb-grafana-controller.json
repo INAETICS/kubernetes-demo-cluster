@@ -5,7 +5,7 @@
 	"labels": {
 	    "name": "influxGrafana"
 	},
-	"name": "infludb-grafana",
+	"name": "influxdb-grafana",
 	"namespace": "default"
     },
     "spec": {

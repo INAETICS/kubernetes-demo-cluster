@@ -31,7 +31,7 @@
             ],
             "ports": [
               {
-                "hostPort": 9082,
+                "hostPort": 9081,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }
@@ -43,7 +43,7 @@
               },
               {
                 "name": "HOSTPORT",
-                "value": "9082"
+                "value": "8080"
               }
             ],
             "resources": {},
