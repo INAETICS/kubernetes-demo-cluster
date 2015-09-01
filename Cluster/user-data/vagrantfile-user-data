@@ -25,15 +25,12 @@ coreos:
 
     - name: fleet.service
       command: start
-      
       drop-ins:
         - name: 50-after-docker-load.conf
           content: |
             [Unit]
             Requires=docker-load.service
             After=docker-load.service
-            Requires=flanneld.service
-            After=flanneld.service
     
     - name: flanneld.service
       drop-ins:
