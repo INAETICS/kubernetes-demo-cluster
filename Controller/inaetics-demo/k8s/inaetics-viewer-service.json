@@ -1,6 +1,6 @@
 {
   "kind": "Service",
-  "apiVersion": "v1beta3",
+  "apiVersion": "v1",
   "metadata": {
     "name": "inaetics-viewer-service",
     "creationTimestamp": null
@@ -8,20 +8,22 @@
   "spec": {
     "ports": [
       {
-        "name": "",
         "protocol": "TCP",
         "port": 80,
-        "targetPort": 8080
+        "targetPort": 8080,
+        "nodePort": 0
       }
     ],
     "selector": {
       "name": "inaetics-datastore-viewer-pod"
     },
-    "portalIP": "",
-    "publicIPs": [
+    "type": "ClusterIP",
+    "deprecatedPublicIPs": [
       "172.17.8.20"
     ],
     "sessionAffinity": "None"
   },
-  "status": {}
+  "status": {
+    "loadBalancer": {}
+  }
 }
