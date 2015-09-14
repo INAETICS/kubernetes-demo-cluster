@@ -48,7 +48,17 @@
             ],
             "resources": {},
             "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent"
+            "imagePullPolicy": "IfNotPresent",
+            "livenessProbe": {
+              "exec" : {
+                "command" : [
+                  "cat",
+                  "/tmp/health"
+                ],
+                "initialDelaySeconds": 10,
+                "timeoutSeconds": 10
+              }
+            }
           }
         ],
         "restartPolicy": "Always",
