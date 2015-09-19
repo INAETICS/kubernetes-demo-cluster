@@ -21,13 +21,13 @@
               {
                 "name": "ETCDCTL_PEERS",
                 "value": "172.17.8.20:5000/172.17.8.20:2379"
-              },
-              {
-                "name": "HOSTPORT",
-                "value": "8080"
               }
             ],
-            "resources": {},
+            "resources": {
+              "limits" : {
+                "memory": "100Mi"
+              }
+            },
             "terminationMessagePath": "/dev/termination-log",
             "imagePullPolicy": "IfNotPresent"
           }
