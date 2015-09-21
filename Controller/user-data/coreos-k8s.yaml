@@ -17,12 +17,13 @@ coreos:
              ExecStart=/usr/bin/bash -c '/usr/bin/fleetctl start --no-block /home/core/fleet-units/*.service'
              ExecStart=/home/core/bin/create-k8s-env.sh
 
-       - name: inaetics-k8s-services.service
+       - name: inaetics.service
+         command: start
          content: |
              [Unit]
-             Description=INAETICS demonstrator Kubernetes services
-             Requires=kubernetes.service
-             After=kubernetes.service
+             Description=INAETICS demonstrator Kubernetes services and controllers
+             Requires=docker-load.service kubernetes.service
+             After=docker-load.service kubernetes.service elk.service
 
              [Service]
              Type=oneshot
@@ -30,21 +31,6 @@ coreos:
              EnvironmentFile=/etc/kubernetes.env
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
-
-       - name: inaetics-k8s-controllers.service
-         command: start
-         content: |
-             [Unit]
-             Description=INAETICS demonstrator Kubernetes controllers
-             Requires=docker-load.service kubernetes.service inaetics-k8s-services.service
-             After=docker-load.service kubernetes.service inaetics-k8s-services.service
-
-             [Service]
-             Type=oneshot
-             RemainAfterExit=yes
-             EnvironmentFile=/etc/kubernetes.env
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
@@ -59,5 +45,7 @@ coreos:
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
 
 ###EOF###
