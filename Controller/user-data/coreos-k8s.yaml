@@ -50,12 +50,14 @@ coreos:
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
              ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
              ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
 
 ###EOF###
