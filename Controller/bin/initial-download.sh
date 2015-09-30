@@ -2,7 +2,7 @@
 
 k8s_version=v1.0.3
 pause_version=0.8.0
-flannel_version=0.5.2
+flannel_version=0.5.3
 
 # get absolute path of this script
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
