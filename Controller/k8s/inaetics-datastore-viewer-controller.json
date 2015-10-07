@@ -2,36 +2,36 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "inaetics-producer-controller",
+    "name": "inaetics-datastore-viewer-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "inaetics-producer-controller"
+      "name": "inaetics-datastore-viewer-controller"
     }
   },
   "spec": {
     "replicas": 1,
     "selector": {
-      "name": "inaetics-producer-pod"
+      "name": "inaetics-datastore-viewer-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "inaetics-producer-pod"
+          "name": "inaetics-datastore-viewer-pod"
         }
       },
       "spec": {
         "containers": [
           {
-            "name": "inaetics-producer-container",
-            "image": "inaetics/felix-agent",
+            "name": "inaetics-datastore-viewer-container",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
               "/tmp/node-agent.sh",
-              "felix_4"
+              "felix_1"
             ],
             "ports": [
               {
-                "hostPort": 8083,
+                "hostPort": 8080,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }

@@ -2,36 +2,36 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "inaetics-processor-celix-controller",
+    "name": "inaetics-queue-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "inaetics-processor-celix-controller"
+      "name": "inaetics-queue-controller"
     }
   },
   "spec": {
-    "replicas": 0,
+    "replicas": 1,
     "selector": {
-      "name": "inaetics-processor-celix-pod"
+      "name": "inaetics-queue-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "inaetics-processor-celix-pod"
+          "name": "inaetics-queue-pod"
         }
       },
       "spec": {
         "containers": [
           {
-            "name": "inaetics-processor-celix-container",
-            "image": "inaetics/celix-agent",
+            "name": "inaetics-queue-container",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
               "/tmp/node-agent.sh",
-              "celix_3"
+              "felix_2"
             ],
             "ports": [
               {
-                "hostPort": 9082,
+                "hostPort": 8080,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }

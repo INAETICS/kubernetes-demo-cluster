@@ -2,36 +2,36 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "inaetics-processor-controller",
+    "name": "inaetics-producer-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "inaetics-processor-controller"
+      "name": "inaetics-producer-controller"
     }
   },
   "spec": {
-    "replicas": 0,
+    "replicas": 1,
     "selector": {
-      "name": "inaetics-processor-pod"
+      "name": "inaetics-producer-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "inaetics-processor-pod"
+          "name": "inaetics-producer-pod"
         }
       },
       "spec": {
         "containers": [
           {
-            "name": "inaetics-processor-container",
-            "image": "inaetics/felix-agent",
+            "name": "inaetics-producer-container",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
               "/tmp/node-agent.sh",
-              "felix_3"
+              "felix_4"
             ],
             "ports": [
               {
-                "hostPort": 8082,
+                "hostPort": 8083,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }

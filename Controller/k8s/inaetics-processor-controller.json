@@ -2,43 +2,36 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "ace-provisioning-controller",
+    "name": "inaetics-processor-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "ace-provisioning-controller"
+      "name": "inaetics-processor-controller"
     }
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 0,
     "selector": {
-      "name": "ace-provisioning-pod"
+      "name": "inaetics-processor-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "ace-provisioning-pod"
+          "name": "inaetics-processor-pod"
         }
       },
       "spec": {
-        "volumes": [
-          {
-            "name": "bundles",
-            "hostPath": {
-              "path": "/home/core/bundles"
-            }
-          }
-        ],
         "containers": [
           {
-            "name": "ace-provisioning-container",
-            "image": "inaetics/node-provisioning",
+            "name": "inaetics-processor-container",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
-              "/tmp/node-provisioning.sh"
+              "/tmp/node-agent.sh",
+              "felix_3"
             ],
             "ports": [
               {
-                "hostPort": 8080,
+                "hostPort": 8082,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }
@@ -54,14 +47,18 @@
               }
             ],
             "resources": {},
-            "volumeMounts": [
-              {
-                "name": "bundles",
-                "mountPath": "/bundles"
-              }
-            ],
             "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent"
+            "imagePullPolicy": "IfNotPresent",
+            "livenessProbe": {
+              "exec" : {
+                "command" : [
+                  "cat",
+                  "/tmp/health"
+                ],
+                "initialDelaySeconds": 10,
+                "timeoutSeconds": 10
+              }
+            }
           }
         ],
         "restartPolicy": "Always",

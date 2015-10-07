@@ -15,37 +15,37 @@ coreos:
              # wait for fleet...
              ExecStart=/usr/bin/sleep 5
              ExecStart=/usr/bin/bash -c '/usr/bin/fleetctl start --no-block /home/core/fleet-units/*.service'
-             ExecStart=/home/core/bin/create-k8s-env.sh
+             ExecStart=/opt/bin/create-k8s-env.sh
 
        - name: inaetics.service
          command: start
          content: |
              [Unit]
              Description=INAETICS demonstrator Kubernetes services and controllers
-             Requires=docker-load.service kubernetes.service
-             After=docker-load.service kubernetes.service elk.service
+             Requires=docker-registry.service kubernetes.service
+             After=docker-registry.service kubernetes.service elk.service
 
              [Service]
              Type=oneshot
              RemainAfterExit=yes
              EnvironmentFile=/etc/kubernetes.env
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/ace-provisioning-service.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-viewer-service.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/ace-provisioning-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-datastore-viewer-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-processor-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-processor-celix-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-producer-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-queue-celix-controller.json
+             ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics-queue-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/ace-provisioning-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-datastore-viewer-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-processor-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-processor-celix-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-producer-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-queue-celix-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-queue-controller.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/ace-provisioning-service.json
+             ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics-viewer-service.json
 
 ###EOF###

@@ -2,32 +2,39 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "inaetics-queue-celix-controller",
+    "name": "ace-provisioning-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "inaetics-queue-celix-controller"
+      "name": "ace-provisioning-controller"
     }
   },
   "spec": {
-    "replicas": 0,
+    "replicas": 1,
     "selector": {
-      "name": "inaetics-queue-celix-pod"
+      "name": "ace-provisioning-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "inaetics-queue-celix-pod"
+          "name": "ace-provisioning-pod"
         }
       },
       "spec": {
+        "volumes": [
+          {
+            "name": "bundles",
+            "hostPath": {
+              "path": "/home/core/bundles"
+            }
+          }
+        ],
         "containers": [
           {
-            "name": "inaetics-queue-celix-container",
-            "image": "inaetics/celix-agent",
+            "name": "ace-provisioning-container",
+            "image": "172.17.8.20:5000/inaetics/node-provisioning",
             "args": [
-              "/tmp/node-agent.sh",
-              "celix_2"
+              "/tmp/node-provisioning.sh"
             ],
             "ports": [
               {
@@ -47,18 +54,14 @@
               }
             ],
             "resources": {},
-            "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent",
-            "livenessProbe": {
-              "exec" : {
-                "command" : [
-                  "cat",
-                  "/tmp/health"
-                ],
-                "initialDelaySeconds": 10,
-                "timeoutSeconds": 10
+            "volumeMounts": [
+              {
+                "name": "bundles",
+                "mountPath": "/bundles"
               }
-            }
+            ],
+            "terminationMessagePath": "/dev/termination-log",
+            "imagePullPolicy": "IfNotPresent"
           }
         ],
         "restartPolicy": "Always",

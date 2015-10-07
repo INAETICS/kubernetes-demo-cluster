@@ -57,6 +57,6 @@ coreos:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/home/core/bin/load-docker-images.sh
+        ExecStart=/opt/bin/load-docker-images.sh
         TimeoutStartSec=0
         Restart=no

@@ -29,7 +29,7 @@ coreos:
         - name: 50-network-config.conf
           content: |
             [Service]
-            ExecStartPre=-/usr/bin/docker load -i /home/core/images/flannel.tar
+            ExecStartPre=-/usr/bin/docker load -i /home/core/images/all/flannel.tar
             ExecStartPre=-/bin/bash -c 'until /usr/bin/etcdctl set /coreos.com/network/config \'{ "Network": "10.1.0.0/16", "Backend": { "Type": "vxlan" } }\'; do echo "waiting for etcd..."; sleep 1; done'
              
     - name: docker.service
@@ -49,9 +49,25 @@ coreos:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/home/core/bin/load-docker-images.sh
+        ExecStart=/opt/bin/load-docker-images.sh
         TimeoutStartSec=0
         Restart=no
+
+    - name: "docker-registry.service"
+      content: |
+        [Unit]
+        Description=Docker Registry Service
+        After=docker.service docker-load.service
+        Requires=docker.service docker-load.service
+
+        [Service]
+        ExecStartPre=-/usr/bin/docker kill registry
+        ExecStartPre=-/usr/bin/docker rm registry
+        ExecStart=/usr/bin/docker run -p 5000:5000 -v /opt/ssl:/ssl -e REGISTRY_HTTP_TLS_CERTIFICATE=/ssl/certs/docker-registry.pem -e REGISTRY_HTTP_TLS_KEY=/ssl/priv/docker-registry-key.pem --name registry registry:2
+        ExecStartPost=/usr/bin/sleep 10
+        ExecStartPost=/usr/bin/docker push 172.17.8.20:5000/inaetics/node-provisioning
+        ExecStartPost=/usr/bin/docker push 172.17.8.20:5000/inaetics/felix-agent
+        ExecStartPost=/usr/bin/docker push 172.17.8.20:5000/inaetics/celix-agent
 
     - name: kubernetes-bootstrap.service
       command: start
