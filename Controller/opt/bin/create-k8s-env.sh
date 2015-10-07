@@ -1,22 +1,23 @@
 #!/bin/bash
 
-# find kubernetes master
-k8s_master=""
-while [ "$k8s_master" == "" ]
-do
-  echo "waiting for kubernetes master starting"
-  sleep 1
-  k8s_master=`fleetctl list-units | grep "kube-apiserver.service.*active.*running" | awk '{print $2}' | sed 's/.*\///'`
-done
+K8S_MASTER=http://localhost:10080
 
-echo "KUBERNETES_MASTER=http://$k8s_master:10260" >/etc/kubernetes.env
+# create env file for inaetics service
+echo "KUBERNETES_MASTER=$K8S_MASTER" >/etc/kubernetes.env
+
+# create kube config file for core user
+exec sudo -u core /bin/bash - << eof
+  kubectl config set-cluster inaetics --server="$K8S_MASTER"
+  kubectl config set-context inaetics --cluster=inaetics
+  kubectl config use-context inaetics
+eof
 
 return_code=1
 while [ "$return_code" != 0 ]
 do
   echo "waiting for kubernetes master running"
   sleep 1
-  wget "http://$k8s_master:10260" -O - &> /dev/null
+  wget "http://$K8S_MASTER" -O - &> /dev/null
   return_code=$?
 done
 

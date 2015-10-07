@@ -40,6 +40,7 @@ Vagrant.configure("2") do |config|
 
             # sync files
             config.vm.synced_folder "../Controller/opt", "/home/core/opt"
+            config.vm.synced_folder "../Controller/k8s", "/home/core/k8s"
             config.vm.synced_folder "../Controller/images/all", "/home/core/images/all"
             config.vm.synced_folder "../Controller/inaetics-demo/bundles", "/home/core/bundles"
             config.vm.synced_folder "user-data", "/tmp/user-data"

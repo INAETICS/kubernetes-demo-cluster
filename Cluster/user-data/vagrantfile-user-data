@@ -14,7 +14,7 @@ coreos:
   fleet:
     public-ip: $public_ipv4
     etcd_servers: http://localhost:2379
-    metadata: role=kubernetes
+    metadata: role=cluster
     
   flannel:
       interface: $public_ipv4
@@ -24,7 +24,6 @@ coreos:
       command: start
 
     - name: fleet.service
-      command: start
       drop-ins:
         - name: 50-after-docker-load.conf
           content: |
@@ -37,7 +36,7 @@ coreos:
         - name: 50-network-config.conf
           content: |
             [Service]
-            ExecStartPre=-/usr/bin/docker load -i /home/core/images/flannel.tar
+            ExecStartPre=-/usr/bin/docker load -i /home/core/images/all/flannel.tar
         
     - name: docker.service
       drop-ins:
@@ -47,7 +46,6 @@ coreos:
             Environment='DOCKER_OPTS=--insecure-registry="172.17.8.0/24"'
 
     - name: docker-load.service
-      command: start
       content: |
         [Unit]
         Description=Docker Load Service
@@ -60,3 +58,16 @@ coreos:
         ExecStart=/opt/bin/load-docker-images.sh
         TimeoutStartSec=0
         Restart=no
+        
+    - name: "kubernetes.service"
+      command: start
+      content: |
+        [Unit]
+        Description=Kubernetes service
+        Requires=etcd2.service docker-load.service
+        After=etcd2.service docker-load.service
+        
+        [Service]
+        ExecStart=/usr/bin/kubelet --api_servers=https://172.17.8.20 --register-node=true --hostname-override=$public_ipv4 --allow-privileged=true --kubeconfig=/home/core/k8s/cluster-kubeconfig.yaml --tls-cert-file=/opt/ssl/certs/worker.pem --tls-private-key-file=/opt/ssl/priv/worker-key.pem --config=/home/core/k8s/manifests/cluster  --node-status-update-frequency=2s --logtostderr=true --v=3
+        Restart=always
+        RestartSec=10

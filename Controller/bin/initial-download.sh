@@ -31,7 +31,7 @@ wget -O "$DIR/../opt/bin/kubectl" "https://storage.googleapis.com/kubernetes-rel
 
 # pull and save 3rd party images
 pullAndSave "gcr.io/google_containers/pause:$pause_version" "$DIR/../images/all/pause.tar"
-#pullAndSave "gcr.io/google_containers/hyperkube:$k8s_version" "$DIR/../images/all/hyperkube.tar"
+pullAndSave "gcr.io/google_containers/hyperkube:$k8s_version" "$DIR/../images/all/hyperkube.tar"
 #pullAndSave "gcr.io/google_containers/podmaster:$pause_version" "$DIR/../images/controller/podmaster.tar"
 pullAndSave "quay.io/coreos/flannel:$flannel_version" "$DIR/../images/all/flannel.tar" 
 pullAndSave "registry:$registry_version" "$DIR/../images/controller/registry.tar" 

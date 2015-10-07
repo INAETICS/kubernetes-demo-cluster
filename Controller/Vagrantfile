@@ -39,7 +39,6 @@ Vagrant.configure("2") do |config|
 
         # sync local directories
         config.vm.synced_folder "opt", "/home/core/opt"
-        config.vm.synced_folder "fleet-units", "/home/core/fleet-units"
         config.vm.synced_folder "k8s", "/home/core/k8s"
         config.vm.synced_folder "images", "/home/core/images"
         config.vm.synced_folder "user-data", "/tmp/user-data"
