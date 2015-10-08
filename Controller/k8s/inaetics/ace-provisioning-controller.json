@@ -24,7 +24,8 @@
         "volumes": [
           {
             "name": "bundles",
-            "hostPath": {
+            "nfs": {
+              "server": "172.17.8.20",
               "path": "/home/core/bundles"
             }
           }

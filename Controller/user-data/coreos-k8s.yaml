@@ -20,8 +20,8 @@ coreos:
       content: |
         [Unit]
         Description=INAETICS demonstrator Kubernetes services and controllers
-        Requires=docker-registry.service kubernetes.service
-        After=docker-registry.service kubernetes.service
+        Requires=docker-registry.service kubernetes.service rpc-mountd.service nfsd.service
+        After=docker-registry.service kubernetes.service rpc-mountd.service nfsd.service
         
         [Service]
         Type=oneshot

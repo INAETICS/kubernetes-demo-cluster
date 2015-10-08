@@ -1,5 +1,10 @@
 #cloud-config
 
+write_files:
+  - path: /etc/exports
+    permissions: '0644'
+    content: /home/core/bundles 172.17.8.0/24(rw,async,no_subtree_check,no_root_squash,fsid=0)
+    
 coreos:
 
   update:
