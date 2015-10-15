@@ -22,7 +22,7 @@ for NAME in celix-agent felix-agent node-provisioning; do
 	remote_name="inaetics/$NAME:latest"
 	local_name="172.17.8.20:5000/$remote_name"
 	docker pull "$remote_name"
-	docker tag -f "$remote_name" "$local_name"
+	docker tag -f "docker.io/$remote_name" "$local_name"
 	docker save -o "$DIR/../inaetics-demo/images/$NAME.tar" "$local_name"
 done
 
