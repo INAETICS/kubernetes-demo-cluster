@@ -8,10 +8,13 @@ flannel_version=0.5.3
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 for NAME in celix-agent felix-agent node-provisioning; do
-	echo "building and saving $NAME image"
-	docker build -t "inaetics/$NAME:latest" "$DIR/../inaetics-demo/$NAME/"
+	echo "pulling and saving $NAME image"
+	docker pull "inaetics/$NAME:latest"
 	docker save -o "$DIR/../inaetics-demo/images/$NAME.tar" "inaetics/$NAME:latest"
 done
+
+echo "get latest bundles"
+wget -O - "https://github.com/INAETICS/bundles/archive/master.tar.gz" | tar -xz -C "$DIR/../inaetics-demo/bundles" --strip=1
 
 echo "downloading kubernetes binaries"
 wget -O - "https://storage.googleapis.com/kubernetes-release/release/$k8s_version/kubernetes-server-linux-amd64.tar.gz" | tar -xz -C "$DIR/../opt/bin" --strip=3
