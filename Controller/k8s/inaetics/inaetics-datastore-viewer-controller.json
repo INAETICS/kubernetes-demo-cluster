@@ -2,39 +2,32 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "ace-provisioning-controller",
+    "name": "inaetics-datastore-viewer-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "ace-provisioning-controller"
+      "name": "inaetics-datastore-viewer-controller"
     }
   },
   "spec": {
     "replicas": 1,
     "selector": {
-      "name": "ace-provisioning-pod"
+      "name": "inaetics-datastore-viewer-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "ace-provisioning-pod"
+          "name": "inaetics-datastore-viewer-pod"
         }
       },
       "spec": {
-        "volumes": [
-          {
-            "name": "bundles",
-            "hostPath": {
-              "path": "/home/core/bundles"
-            }
-          }
-        ],
         "containers": [
           {
-            "name": "ace-provisioning-container",
-            "image": "inaetics/node-provisioning",
+            "name": "inaetics-datastore-viewer-container",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
-              "/tmp/node-provisioning.sh"
+              "/tmp/node-agent.sh",
+              "felix_1"
             ],
             "ports": [
               {
@@ -54,14 +47,18 @@
               }
             ],
             "resources": {},
-            "volumeMounts": [
-              {
-                "name": "bundles",
-                "mountPath": "/bundles"
-              }
-            ],
             "terminationMessagePath": "/dev/termination-log",
-            "imagePullPolicy": "IfNotPresent"
+            "imagePullPolicy": "IfNotPresent",
+            "livenessProbe": {
+              "exec" : {
+                "command" : [
+                  "cat",
+                  "/tmp/health"
+                ],
+                "initialDelaySeconds": 10,
+                "timeoutSeconds": 10
+              }
+            }
           }
         ],
         "restartPolicy": "Always",

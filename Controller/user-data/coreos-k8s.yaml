@@ -1,51 +1,49 @@
 #cloud-config
 
 coreos:
-    units:
-       - name: kubernetes.service
-         content: |
-             [Unit]
-             Description=Kubernetes Start script
-             Requires=etcd2.service fleet.service
-             After=etcd2.service fleet.service
-
-             [Service]
-             Type=oneshot
-             RemainAfterExit=yes
-             # wait for fleet...
-             ExecStart=/usr/bin/sleep 5
-             ExecStart=/usr/bin/bash -c '/usr/bin/fleetctl start --no-block /home/core/fleet-units/*.service'
-             ExecStart=/home/core/bin/create-k8s-env.sh
-
-       - name: inaetics.service
-         command: start
-         content: |
-             [Unit]
-             Description=INAETICS demonstrator Kubernetes services and controllers
-             Requires=docker-load.service kubernetes.service
-             After=docker-load.service kubernetes.service elk.service
-
-             [Service]
-             Type=oneshot
-             RemainAfterExit=yes
-             EnvironmentFile=/etc/kubernetes.env
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
-             ExecStart=/opt/bin/kubectl create -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-datastore-viewer-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-processor-celix-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-producer-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-celix-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-queue-controller.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/ace-provisioning-service.json
-             ExecStop=/opt/bin/kubectl delete -f /home/core/inaetics-demo/k8s/inaetics-viewer-service.json
+  units:
+    - name: "kubernetes.service"
+      content: |
+        [Unit]
+        Description=Kubernetes service
+        Requires=etcd2.service docker-load.service
+        After=etcd2.service docker-load.service
+        
+        [Service]
+        ExecStart=/usr/bin/kubelet --api_servers=127.0.0.1:10080 --register-node=false --allow-privileged=true --config=/home/core/k8s/manifests/controller --hostname-override=$public_ipv4 --logtostderr=true --v=3
+        ExecStartPost=/opt/bin/create-k8s-env.sh
+        Restart=always
+        RestartSec=10
+        
+    - name: inaetics.service
+      command: start
+      content: |
+        [Unit]
+        Description=INAETICS demonstrator Kubernetes services and controllers
+        Requires=docker-registry.service kubernetes.service rpc-mountd.service nfsd.service
+        After=docker-registry.service kubernetes.service rpc-mountd.service nfsd.service
+        
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        EnvironmentFile=/etc/kubernetes.env
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/ace-provisioning-service.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-viewer-service.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/ace-provisioning-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-datastore-viewer-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-processor-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-processor-celix-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-producer-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-queue-celix-controller.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/inaetics-queue-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/ace-provisioning-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-datastore-viewer-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-processor-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-processor-celix-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-producer-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-queue-celix-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-queue-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/ace-provisioning-service.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/inaetics-viewer-service.json
 
 ###EOF###

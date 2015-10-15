@@ -24,7 +24,7 @@
         "containers": [
           {
             "name": "inaetics-producer-container",
-            "image": "inaetics/felix-agent",
+            "image": "172.17.8.20:5000/inaetics/felix-agent",
             "args": [
               "/tmp/node-agent.sh",
               "felix_4"

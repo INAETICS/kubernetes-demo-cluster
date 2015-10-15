@@ -24,7 +24,7 @@
         "containers": [
           {
             "name": "inaetics-queue-celix-container",
-            "image": "inaetics/celix-agent",
+            "image": "172.17.8.20:5000/inaetics/celix-agent",
             "args": [
               "/tmp/node-agent.sh",
               "celix_2"

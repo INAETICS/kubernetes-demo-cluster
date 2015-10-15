@@ -42,9 +42,9 @@ has a couple of more dependencies that it uses and responsibilities it takes car
 
 1. it installs and starts the Flannel service for the virtualized networking between the
    various application services;
-2. it tells Fleet to install and start the various Kubernetes services onto *both* the controller and
-   cluster nodes 
-3. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
+2. it runs the Kubernetes master components (apiserver, controller, scheduler)
+3. it runs a docker registry for the inaetics images
+4. and lastly, it tells Kubernetes to setup and deploy our demonstrator application.
 
 ## Preparation
 
@@ -59,7 +59,7 @@ script (assuming `$GIT_REPO` is set to the location of the kubernetes-demo-clust
     ...
     
 The Docker images are saved to tar files. The tar files and the downloaded binaries are provisioned by vagrant
-to the CoreOS host during startup. Since the Docker images are quite big, the startup can take a while.
+to the CoreOS hosts during startup. Since the Docker images are quite big, the startup can take a while.
 
 ## Running
 
@@ -73,39 +73,32 @@ First, we need to start the controller node. For this, we need to do:
     ==> controller: Running provisioner: shell...
         controller: Running: inline script
 
-    CoreOS alpha (618.0.0)
+    CoreOS alpha (815.0.0)
     core@controller ~ $ _
 
 After the controller node is started, it automatically proceeds and starts a number of
-dependencies. One of the last services that is being started is the actual Kubernetes
-services, so to get a notion on whether the controller is fully ready, we can watch the
-journal of the kubernetes service (this takes a while!):
+dependencies. The last services that is being started is the actual inaetics
+service, so to get a notion on whether the controller is fully ready, we can watch the
+journal of the inaetics service (this takes a while!):
 
-    core@controller ~ $ journalctl -fu kubernetes.service
+    core@controller ~ $ journalctl -fu inaetics.service
     ...
-    Mar 18 12:00:00 controller systemd[1]: Started Kubernetes Start script.
+    Oct 08 08:31:30 controller systemd[1]: Started INAETICS demonstrator Kubernetes services and controllers.
 
-Once the Kubernetes service is up and running, you can exit journalctl with Ctrl^C.
+Once the inaetics service is up and running, you can exit journalctl with Ctrl^C.
 
-Finally the demonstrator is started. It consists of several kubernetes services and replication controllers
-respectivly pods. They are started by inaetics-k8s-services.service and inaetics-k8s-controllers.service.
-You can check their status the same way as you did for the kubernetes.service before.
+The inaetics service starts several kubernetes services and replication controllers
+respectivly pods. You can use the `kubectl` script to see what is happening.
 
-Now you can use the `kubectl` script to see
-what is happening, but we need to tell it where the Kubernetes API server is running:
-
-    core@controller ~ $ export $(cat /etc/kubernetes.env)
-    
 You can list the kubernetes services by:
 
     core@controller ~ $ kubectl get services
-    NAME                       LABELS                                    SELECTOR                             IP                  PORT
-    ace-provisioning-service   <none>                                    name=ace-provisioning-pod            10.0.247.91         90
-    inaetics-viewer-service    <none>                                    name=inaetics-datastore-viewer-pod   10.0.233.110        80
-    kubernetes                 component=apiserver,provider=kubernetes   <none>                               10.0.0.2            443
-    kubernetes-ro              component=apiserver,provider=kubernetes   <none>                               10.0.0.1            80
+    NAME                       LABELS                                    SELECTOR                             IP(S)          PORT(S)
+    ace-provisioning-service   <none>                                    name=ace-provisioning-pod            10.3.188.132   90/TCP
+    inaetics-viewer-service    <none>                                    name=inaetics-datastore-viewer-pod   10.3.21.191    80/TCP
+    kubernetes                 component=apiserver,provider=kubernetes   <none>                               10.3.0.1       443/TCP
 
-The listing above tells us that the `ace-provisioning-services` service runs on port `90`
+The listing above tells us that the `ace-provisioning-service` service runs on port `90`
 and the `inaetics-viewer-service` runs on port `80`. Note the "odd" looking IP addresses,
 these are assigned by Flannel and are used for internal communication.
 
@@ -143,7 +136,7 @@ Each of the cluster nodes starts both Flannel and Kubernetes after which
 they are ready for action. Note: since several docker images are copied to each node, the startup is
 quite slow.
 
-Once the cluster nodes are up and detected by the Kubernetes API-server, they are
+Once the cluster nodes are up and registered themself at the Kubernetes API-server, they are
 automatically provisioned with the INAETICS demonstrator application.
 
 You can check the status of the provisioning by listing the detected nodes and installed pods
@@ -155,12 +148,16 @@ on the controller node:
     172.17.8.32   kubernetes.io/hostname=172.17.8.32   Ready
     ...
     
-    core@controller ~ $ kubectl get pods
-    NAME                                         READY     STATUS    RESTARTS   AGE
-    ace-provisioning-controller-kxbc6            1/1       Running   0          10m
-    inaetics-datastore-viewer-controller-8y75i   1/1       Running   0          10m
-    inaetics-producer-controller-it24j           1/1       Running   0          10m
-    inaetics-queue-controller-riebp              0/1       Pending   0          10m
+    core@controller ~ $ kubectl get pods -o=wide
+    NAME                                         READY     STATUS    RESTARTS   AGE       NODE
+    ace-provisioning-controller-2n4w5            1/1       Running   0          19m       172.17.8.32
+    inaetics-datastore-viewer-controller-nk1bn   1/1       Running   0          19m       172.17.8.31
+    inaetics-processor-celix-controller-amtur    1/1       Running   0          1m        172.17.8.35
+    inaetics-processor-celix-controller-t1phl    1/1       Running   0          44s       172.17.8.32
+    inaetics-processor-controller-0n554          1/1       Running   0          3m        172.17.8.31
+    inaetics-processor-controller-7jap8          1/1       Running   0          54s       172.17.8.34
+    inaetics-producer-controller-m871n           1/1       Running   0          19m       172.17.8.34
+    inaetics-queue-controller-9jcpk              1/1       Running   0          19m       172.17.8.33
 
 
 This application has a webpage that displays a couple of nice graphs and a dashboard which can be reached on the URL:

@@ -2,36 +2,36 @@
   "kind": "ReplicationController",
   "apiVersion": "v1",
   "metadata": {
-    "name": "inaetics-datastore-viewer-controller",
+    "name": "inaetics-processor-celix-controller",
     "creationTimestamp": null,
     "labels": {
-      "name": "inaetics-datastore-viewer-controller"
+      "name": "inaetics-processor-celix-controller"
     }
   },
   "spec": {
-    "replicas": 1,
+    "replicas": 0,
     "selector": {
-      "name": "inaetics-datastore-viewer-pod"
+      "name": "inaetics-processor-celix-pod"
     },
     "template": {
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "name": "inaetics-datastore-viewer-pod"
+          "name": "inaetics-processor-celix-pod"
         }
       },
       "spec": {
         "containers": [
           {
-            "name": "inaetics-datastore-viewer-container",
-            "image": "inaetics/felix-agent",
+            "name": "inaetics-processor-celix-container",
+            "image": "172.17.8.20:5000/inaetics/celix-agent",
             "args": [
               "/tmp/node-agent.sh",
-              "felix_1"
+              "celix_3"
             ],
             "ports": [
               {
-                "hostPort": 8080,
+                "hostPort": 9082,
                 "containerPort": 8080,
                 "protocol": "TCP"
               }

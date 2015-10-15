@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: kube-apiserver
+    namespace: kube-system
+spec:
+    hostNetwork: true
+    containers:
+    - name: kube-apiserver
+      image: gcr.io/google_containers/hyperkube:v1.0.6
+      command:
+      - /hyperkube
+      - apiserver
+      - --bind-address=0.0.0.0
+      - --etcd_servers=http://172.17.8.20:2379
+      - --allow-privileged=true
+      - --service-cluster-ip-range=10.3.0.0/16
+      - --secure_port=443
+      - --insecure-port=10080
+      - --advertise-address=172.17.8.20
+      - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+      - --tls-cert-file=/opt/ssl/certs/apiserver.pem
+      - --tls-private-key-file=/opt/ssl/priv/apiserver-key.pem
+      - --client-ca-file=/opt/ssl/certs/ca.pem
+      - --service-account-key-file=/opt/ssl/priv/apiserver-key.pem
+      - --basic_auth_file=/opt/kubernetes/users.auth
+      - --logtostderr=true
+      - --v=3
+
+      ports:
+      - containerPort: 443
+        hostPort: 443
+        name: https
+      - containerPort: 10080
+        hostPort: 10080
+        name: local
+      volumeMounts:
+      - mountPath: /opt/kubernetes
+        name: kubernetes
+        readOnly: true
+      - mountPath: /opt/ssl
+        name: ssl-certs-kubernetes
+        readOnly: true
+      - mountPath: /etc/ssl/certs
+        name: ssl-certs-host
+        readOnly: true
+    volumes:
+    - hostPath:
+        path: /home/core/k8s
+      name: kubernetes
+    - hostPath:
+        path: /opt/ssl
+      name: ssl-certs-kubernetes
+    - hostPath:
+        path: /usr/share/ca-certificates
+      name: ssl-certs-host
+
+###EOF###
