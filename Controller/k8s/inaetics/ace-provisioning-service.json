@@ -11,19 +11,13 @@
         "protocol": "TCP",
         "port": 90,
         "targetPort": 8080,
-        "nodePort": 0
+        "nodePort": 90
       }
     ],
     "selector": {
       "name": "ace-provisioning-pod"
     },
-    "type": "ClusterIP",
-    "deprecatedPublicIPs": [
-      "172.17.8.20"
-    ],
+    "type": "NodePort",
     "sessionAffinity": "None"
-  },
-  "status": {
-    "loadBalancer": {}
   }
 }

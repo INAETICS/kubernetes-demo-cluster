@@ -11,19 +11,13 @@
         "protocol": "TCP",
         "port": 80,
         "targetPort": 8080,
-        "nodePort": 0
+        "nodePort": 80
       }
     ],
     "selector": {
       "name": "inaetics-datastore-viewer-pod"
     },
-    "type": "ClusterIP",
-    "deprecatedPublicIPs": [
-      "172.17.8.20"
-    ],
+    "type": "NodePort",
     "sessionAffinity": "None"
-  },
-  "status": {
-    "loadBalancer": {}
   }
 }

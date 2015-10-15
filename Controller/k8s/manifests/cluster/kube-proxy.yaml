@@ -12,7 +12,7 @@ spec:
     - /hyperkube
     - proxy
     - --master=https://172.17.8.20
-    - --kubeconfig=/opt/kubernetes/worker-kubeconfig.yaml
+    - --kubeconfig=/opt/kubernetes/cluster-kubeconfig.yaml
     securityContext:
       privileged: true
     volumeMounts:
