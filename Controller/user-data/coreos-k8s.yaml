@@ -15,6 +15,24 @@ coreos:
         Restart=always
         RestartSec=10
         
+    - name: elk.service
+      # command: start
+      content: |
+        [Unit]
+        Description=ELK service and controller
+        Requires=kubernetes.service
+        After=kubernetes.service
+        Before=inaetics.service
+        
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        EnvironmentFile=/etc/kubernetes.env
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/elk-service.json
+        ExecStart=/opt/bin/kubectl create -f /home/core/k8s/inaetics/elk-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/elk-controller.json
+        ExecStop=/opt/bin/kubectl delete -f /home/core/k8s/inaetics/elk-service.json
+
     - name: inaetics.service
       command: start
       content: |

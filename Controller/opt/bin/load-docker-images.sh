@@ -1,24 +1,13 @@
 #!/bin/bash
+
 sleep 5
 
-cd /home/core/images/all
-for I in *.tar; do
-	echo "loading image $I"
-	docker load -i $I
+for DIR in /home/core/images/all /home/core/images/controller /home/core/images/cluster /home/core/inaetics-demo/images; do
+	if [ -d "$DIR" ]; then
+		cd "$DIR"
+		for TARFILE in *.tar; do
+			echo "loading image $TARFILE"
+			docker load -i "$TARFILE"
+		done
+	fi
 done
-
-if [ -d /home/core/images/controller ]; then
-	cd /home/core/images/controller
-	for I in *.tar; do
-		echo "loading image $I"
-		docker load -i $I
-	done
-fi
-
-if [ -d /home/core/inaetics-demo/images ]; then
-    cd /home/core/inaetics-demo/images
-    for I in *.tar; do
-	    echo "loading image $I"
-	    docker load -i $I
-    done
-fi

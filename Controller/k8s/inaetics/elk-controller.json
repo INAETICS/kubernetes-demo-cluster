@@ -1,0 +1,87 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "elk-controller",
+    "labels": {
+      "name": "elk-controller"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "name": "elk-pod"
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "name": "elk-pod"
+        }
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "configs",
+            "hostPath": {
+              "path": "/home/core/configs"
+            }
+          }
+        ],
+        "containers": [
+          {
+            "name": "logstash-container",
+            "image": "logstash",
+            "args": [
+              "logstash",
+              "-f",
+              "/etc/configs/logstash.conf"
+            ],
+            "resources": {
+              "limits" : {
+                "memory": "600Mi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "configs",
+                "mountPath": "/etc/configs"
+              }
+            ],            
+            "terminationMessagePath": "/dev/termination-log",
+            "imagePullPolicy": "IfNotPresent"
+          },
+          {
+            "name": "elasticsearch-container",
+            "image": "slintes/elasticsearch",
+            "resources": {
+              "limits" : {
+                "memory": "600Mi"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "imagePullPolicy": "IfNotPresent"
+          },
+          {
+            "name": "kibana-container",
+            "image": "slintes/kibana",
+            "resources": {
+              "limits" : {
+                "memory": "100Mi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "configs",
+                "mountPath": "/opt/kibana/config"
+              }
+            ],
+            "terminationMessagePath": "/dev/termination-log",
+            "imagePullPolicy": "IfNotPresent"
+          }
+        ],
+        "restartPolicy": "Always",
+        "dnsPolicy": "ClusterFirst"
+      }
+    }
+  }
+}

@@ -38,3 +38,8 @@ pullAndSave "gcr.io/google_containers/hyperkube:$k8s_version" "$DIR/../images/al
 #pullAndSave "gcr.io/google_containers/podmaster:$pause_version" "$DIR/../images/controller/podmaster.tar"
 pullAndSave "quay.io/coreos/flannel:$flannel_version" "$DIR/../images/all/flannel.tar" 
 pullAndSave "registry:$registry_version" "$DIR/../images/controller/registry.tar" 
+
+# only when using ELK
+#pullAndSave "slintes/elasticsearch:latest" "$DIR/../images/cluster/elasticsearch.tar"
+#pullAndSave "logstash:latest" "$DIR/../images/cluster/logstash.tar"
+#pullAndSave "slintes/kibana:latest" "$DIR/../images/cluster/kibana.tar"

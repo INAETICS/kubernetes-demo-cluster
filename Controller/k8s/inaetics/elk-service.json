@@ -1,0 +1,37 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "elk-service"
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "elasticsearch",
+        "protocol": "TCP",
+        "port": 9200,
+        "targetPort": 9200,
+        "nodePort": 82
+      },
+      {
+        "name": "logstash",
+        "protocol": "TCP",
+        "port": 5000,
+        "targetPort": 5000,
+        "nodePort": 83
+      },
+      {
+        "name": "kibana",
+        "protocol": "TCP",
+        "port": 5601,
+        "targetPort": 5601,
+        "nodePort": 81
+      }
+    ],
+    "selector": {
+      "name": "elk-pod"
+    },
+    "type": "NodePort",
+    "sessionAffinity": "None"
+  }
+}

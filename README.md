@@ -171,6 +171,10 @@ The number of producers can be scaled on the dashboard.
 The dashboard also shows the number of actual running and requested processors and producers.
 You can also use `kubectl get rc` and `kubectl get pods` for monitoring what kubernetes is doing.
 
+## Debugging
+
+There is a separate document about [debugging the demonstrator](debugging.md).
+
 ## References
 
 1. https://github.com/kelseyhightower/kubernetes-fleet-tutorial
