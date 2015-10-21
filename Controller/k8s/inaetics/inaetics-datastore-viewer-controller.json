@@ -21,6 +21,14 @@
         }
       },
       "spec": {
+        "volumes": [
+          {
+            "name": "configs",
+            "hostPath": {
+              "path": "/home/core/configs"
+            }
+          }
+        ],
         "containers": [
           {
             "name": "inaetics-datastore-viewer-container",
@@ -40,6 +48,12 @@
                 "memory": "400Mi"
               }
             },
+            "volumeMounts": [
+              {
+                "name": "configs",
+                "mountPath": "/tmp/conf"
+              }
+            ],
             "terminationMessagePath": "/dev/termination-log",
             "imagePullPolicy": "IfNotPresent",
             "livenessProbe": {

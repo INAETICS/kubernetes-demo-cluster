@@ -21,6 +21,14 @@
         }
       },
       "spec": {
+        "volumes": [
+          {
+            "name": "configs",
+            "hostPath": {
+              "path": "/home/core/configs"
+            }
+          }
+        ],
         "containers": [
           {
             "name": "inaetics-processor-container",
@@ -40,6 +48,12 @@
                 "memory": "300Mi"
               }
             },
+            "volumeMounts": [
+              {
+                "name": "configs",
+                "mountPath": "/tmp/conf"
+              }
+            ],
             "terminationMessagePath": "/dev/termination-log",
             "imagePullPolicy": "IfNotPresent",
             "livenessProbe": {
