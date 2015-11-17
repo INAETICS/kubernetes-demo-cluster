@@ -58,13 +58,13 @@
             "imagePullPolicy": "IfNotPresent",
             "livenessProbe": {
               "exec" : {
-                "command" : [
+                "command": [
                   "cat",
                   "/tmp/health"
-                ],
-                "initialDelaySeconds": 10,
-                "timeoutSeconds": 10
-              }
+                ]
+              },
+              "initialDelaySeconds": 10,
+              "timeoutSeconds": 10
             }
           }
         ],

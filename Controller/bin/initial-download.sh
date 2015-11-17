@@ -1,9 +1,9 @@
 #!/bin/bash
 
-k8s_version=v1.0.6
-pause_version=0.8.0
-podmaster_version=1.1
-flannel_version=0.5.3
+k8s_version=v1.1.1 # see https://github.com/kubernetes/kubernetes/releases
+pause_version=2.0 # see https://github.com/kubernetes/kubernetes/blob/master/build/pause/Makefile#L4
+podmaster_version=1.1 # see https://github.com/kubernetes/kubernetes/blob/master/docs/admin/high-availability/podmaster.yaml#L9
+flannel_version=0.5.3 # search on https://coreos.com/releases/
 registry_version=2
 
 pullAndSave() {

@@ -54,7 +54,7 @@ In order to see full logs, use the ```journalctl``` command. Some useful options
 The demonstrator comes with a preconfigured ```kubectl``` binary, the kubernetes command line tool. Some useful commands are:
  
  - ```kubectl get no```: list nodes
- - ```kubectl get se```: list services
+ - ```kubectl get svc```: list services
  - ```kubectl get rc```: list replication controllers
  - ```kubectl get po -o=wide```: list pods (inclusive IPs)
  - ```kubectl get ev```: list events
