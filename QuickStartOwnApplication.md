@@ -55,5 +55,4 @@ Cluster Machines:
 - Software bundles used by ACE (network mount point or pre-installed)
  
 Optionally kubernetes can be started inside docker with the hyperkube image, see our master branch
-Optionally ACE can be started on the Controller, see bare-metal-installation repo
 Optionally a Docker registry is run on the Controller, see our master branch
